@@ -20,11 +20,16 @@ export const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 overflow-hidden ${
         scrolled ? 'py-3 glass-nav' : 'py-6 bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
+      {/* Subtle light refraction shimmer sweep on scroll */}
+      {scrolled && (
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-[200%] h-full pointer-events-none opacity-50 -skew-x-12 animate-[wave-drift_6s_ease-in-out_infinite_alternate]" />
+      )}
+
+      <div className="container mx-auto px-6 md:px-12 flex items-center justify-between relative z-10">
         {/* Logo — Fraunces */}
         <a
           href="#"
@@ -39,10 +44,9 @@ export const Navbar = () => {
             <a
               key={link}
               href={`#${link.toLowerCase().replace(' ', '-')}`}
-              className={`text-sm font-medium transition-colors relative group text-[var(--ocean-deep)] hover:text-[var(--coral)]`}
+              className="text-sm font-semibold transition-colors text-[var(--ocean-deep)] hover:text-[var(--coral)] link-flow pb-1"
             >
               {link}
-              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[var(--coral)] transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
         </div>

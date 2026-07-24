@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Anchor, GraduationCap, Microscope, Megaphone } from 'lucide-react';
+import { WaveDivider } from '../components/ui/WaveDivider';
 
 const missions = [
   {
@@ -36,26 +37,13 @@ const missions = [
 
 export const Mission = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
 
   return (
-    <section id="mission" className="py-32 relative bg-[var(--ocean-deep)] overflow-hidden">
+    <section id="mission" className="py-32 bg-[var(--depth-4)] relative overflow-hidden">
       
-      {/* Decorative blobs */}
-      <div className="absolute top-20 left-[-10%] w-96 h-96 bg-[var(--seafoam)]/10 blur-[100px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-[var(--coral)]/10 blur-[120px] rounded-full pointer-events-none" />
-
-      {/* Coral-branch background */}
-      <div className="absolute inset-0 coral-branch-bg opacity-30 pointer-events-none" />
+      {/* Background Ambience */}
+      <div className="absolute top-0 right-0 w-full h-[500px] bg-gradient-to-b from-[var(--depth-4)] to-transparent pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-[var(--sunlight)]/10 blur-[120px] rounded-full pointer-events-none animate-current-drift" style={{ animationDelay: '3s' }} />
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         
@@ -65,36 +53,25 @@ export const Mission = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-heading mb-6 tracking-tight text-[var(--sand)]"
+            className="text-5xl md:text-7xl font-heading mb-6 text-[var(--foam)] tracking-tight"
           >
-            The Strategy.
+            Our Mission
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl text-[var(--sand)]/70 font-light"
+            className="text-xl text-[var(--foam)]/80 font-normal leading-relaxed"
           >
-            We deploy a multi-faceted approach to ocean conservation. True impact requires action on all fronts—from the ocean floor to the halls of government.
+            We operate at the intersection of marine biology, community action, and scalable restoration tech to give coral reefs a fighting chance.
           </motion.p>
         </div>
 
         <div 
           ref={containerRef}
-          onMouseMove={handleMouseMove}
           className="grid grid-cols-1 md:grid-cols-12 gap-6 relative"
         >
-          {/* Interactive Mouse Glow */}
-          <div 
-            className="absolute pointer-events-none rounded-full blur-[80px] bg-[var(--coral-light)]/10 w-96 h-96 -translate-x-1/2 -translate-y-1/2 z-0 transition-opacity duration-300"
-            style={{ 
-              left: `${mousePos.x}px`, 
-              top: `${mousePos.y}px`,
-              opacity: mousePos.x === 0 ? 0 : 1
-            }}
-          />
-
           {missions.map((mission, index) => {
             const MissionIcon = mission.icon;
             return (
@@ -104,26 +81,26 @@ export const Mission = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className={`group relative overflow-hidden reef-card-dark ${mission.colSpan}`}
+              className={`group relative overflow-hidden reef-card ${mission.colSpan}`}
             >
-              {/* Background image for featured card */}
+              {/* Background image for featured card with water-mask style */}
               {mission.bgImg && (
                 <div 
-                  className="absolute inset-0 bg-cover bg-center opacity-0 group-hover:opacity-20 transition-opacity duration-700 z-0 scale-105 group-hover:scale-100"
+                  className="absolute inset-0 bg-cover bg-center opacity-0 group-hover:opacity-10 transition-opacity duration-700 z-0 scale-105 group-hover:scale-100"
                   style={{ backgroundImage: mission.bgImg }}
                 />
               )}
 
               <div className="relative z-10 flex flex-col h-full justify-between w-full p-10 md:p-12">
-                <div className="w-14 h-14 rounded-2xl bg-[var(--sand)]/5 border border-[var(--seafoam)]/20 flex items-center justify-center mb-10 group-hover:bg-[var(--coral)]/20 transition-all duration-500 group-hover:-translate-y-1">
-                  <MissionIcon size={24} className="text-[var(--sand)] group-hover:text-[var(--coral)] transition-colors duration-500" strokeWidth={1.5} />
+                <div className="w-14 h-14 rounded-2xl bg-[var(--deep-blue)]/5 border border-[var(--surface-blue)]/30 flex items-center justify-center mb-10 group-hover:bg-[var(--sunlight)]/10 transition-all duration-500 group-hover:-translate-y-1">
+                  <MissionIcon size={24} className="text-[var(--deep-blue)] group-hover:text-[var(--sunlight)] transition-colors duration-500" strokeWidth={1.5} />
                 </div>
                 
                 <div>
-                  <h3 className="text-3xl font-heading mb-4 text-[var(--sand)]">
+                  <h3 className="text-3xl font-heading mb-4 text-[var(--deep-blue)]">
                     {mission.title}
                   </h3>
-                  <p className="text-[var(--sand)]/60 leading-relaxed font-light text-lg">
+                  <p className="text-[var(--ink)]/70 leading-relaxed font-normal text-lg">
                     {mission.description}
                   </p>
                 </div>
@@ -132,6 +109,11 @@ export const Mission = () => {
             );
           })}
         </div>
+      </div>
+
+      {/* Wave SVG divider at bottom to transition to GetInvolved (--depth-5) */}
+      <div className="absolute bottom-0 left-0 w-full z-[5]">
+        <WaveDivider topColor="transparent" bottomColor="var(--depth-5)" />
       </div>
     </section>
   );

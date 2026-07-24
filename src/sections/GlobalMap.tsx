@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { WaveDivider } from '../components/ui/WaveDivider';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { ArrowRight, Activity } from 'lucide-react';
+import { ArrowRight, Activity, MapPin, Target, Shield, Calendar, Users } from 'lucide-react';
 import Magnetic from '../components/ui/Magnetic';
 
 const projects = [
@@ -14,6 +15,10 @@ const projects = [
     health: 'Critical',
     progress: 45,
     image: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&q=80&w=400',
+    area: '1.2M sq ft',
+    species: 124,
+    years: 5,
+    partners: 'GBR Foundation, NOAA'
   },
   {
     id: 2,
@@ -23,6 +28,10 @@ const projects = [
     health: 'Recovering',
     progress: 72,
     image: 'https://images.unsplash.com/photo-1582967788606-a171c1080cb0?auto=format&fit=crop&q=80&w=400',
+    area: '850k sq ft',
+    species: 45,
+    years: 8,
+    partners: 'Mote Marine Lab'
   },
   {
     id: 3,
@@ -32,19 +41,23 @@ const projects = [
     health: 'Stable',
     progress: 90,
     image: 'https://images.unsplash.com/photo-1620921575225-780c10972b22?auto=format&fit=crop&q=80&w=400',
+    area: '2.5M sq ft',
+    species: 320,
+    years: 12,
+    partners: 'Conservation Intl'
   }
 ];
 
 // Custom animated marker
 const createCustomIcon = (health: string) => {
-  const colorClass = health === 'Critical' ? 'bg-[var(--coral)]' : health === 'Recovering' ? 'bg-[var(--coral-light)]' : 'bg-[var(--seafoam)]';
+  const colorClass = health === 'Critical' ? 'bg-[var(--sunlight)]' : health === 'Recovering' ? 'bg-[var(--ocean)]' : 'bg-[var(--surface-blue)]';
   
   return L.divIcon({
     className: 'custom-leaflet-icon',
     html: `
       <div class="relative flex items-center justify-center w-10 h-10 group cursor-pointer">
         <div class="absolute inset-0 rounded-full ${colorClass} opacity-30 group-hover:opacity-60 group-hover:scale-150 transition-all duration-500 animate-ping"></div>
-        <div class="relative w-4 h-4 rounded-full ${colorClass} shadow-[0_0_15px_rgba(255,255,255,0.5)] border-2 border-[var(--ocean-deep)] group-hover:scale-125 transition-transform duration-300"></div>
+        <div class="relative w-4 h-4 rounded-full ${colorClass} shadow-[0_0_15px_rgba(255,255,255,0.5)] border-2 border-[var(--deep-blue)] group-hover:scale-125 transition-transform duration-300"></div>
       </div>
     `,
     iconSize: [40, 40],
@@ -54,12 +67,12 @@ const createCustomIcon = (health: string) => {
 
 export const GlobalMap = () => {
   return (
-    <section id="global-map" className="py-32 bg-[var(--ocean-deep)] relative overflow-hidden">
+    <section id="global-map" className="py-32 bg-[var(--depth-6)] relative overflow-hidden">
       
       {/* Background Ambience */}
-      <div className="absolute top-0 right-0 w-full h-[500px] bg-gradient-to-b from-[var(--ocean-deep)]/40 to-transparent pointer-events-none" />
+      <div className="absolute top-0 right-0 w-full h-[500px] bg-gradient-to-b from-[var(--depth-6)] to-transparent pointer-events-none" />
 
-      <div className="container mx-auto px-6 md:px-12 mb-20 relative z-20">
+      <div className="container mx-auto px-6 md:px-12 mb-12 relative z-20">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -67,48 +80,40 @@ export const GlobalMap = () => {
           className="flex flex-col md:flex-row md:items-end justify-between gap-8"
         >
           <div className="max-w-3xl">
-            <h2 className="text-5xl md:text-7xl font-heading mb-6 text-[var(--sand)] tracking-tight">Global Impact</h2>
-            <p className="text-xl text-[var(--sand)]/70 font-light leading-relaxed">
+            <h2 className="text-5xl md:text-7xl font-heading mb-6 text-[var(--foam)] tracking-tight">Global Impact</h2>
+            <p className="text-xl text-[var(--foam)]/80 font-normal leading-relaxed">
               Explore our active restoration sites and protection zones across the world's oceans. Every marker represents a restored future.
             </p>
           </div>
           
-          <div className="flex gap-6 p-4 rounded-full glass-dark shrink-0">
-            <div className="flex items-center gap-3 text-sm text-[var(--sand)]/90 tracking-wide">
-              <span className="w-2.5 h-2.5 rounded-full bg-[var(--coral)] shadow-[0_0_10px_var(--coral)]"></span> Critical
+          <div className="flex gap-6 p-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-sm shrink-0">
+            <div className="flex items-center gap-3 text-sm text-[var(--foam)] font-medium tracking-wide">
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--sunlight)] shadow-[0_0_10px_var(--sunlight)]"></span> Critical
             </div>
-            <div className="flex items-center gap-3 text-sm text-[var(--sand)]/90 tracking-wide">
-              <span className="w-2.5 h-2.5 rounded-full bg-[var(--coral-light)] shadow-[0_0_10px_var(--coral-light)]"></span> Recovering
+            <div className="flex items-center gap-3 text-sm text-[var(--foam)] font-medium tracking-wide">
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--ocean)] shadow-[0_0_10px_var(--ocean)]"></span> Recovering
             </div>
-            <div className="flex items-center gap-3 text-sm text-[var(--sand)]/90 tracking-wide">
-              <span className="w-2.5 h-2.5 rounded-full bg-[var(--seafoam)] shadow-[0_0_10px_var(--seafoam)]"></span> Stable
+            <div className="flex items-center gap-3 text-sm text-[var(--foam)] font-medium tracking-wide">
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--surface-blue)] shadow-[0_0_10px_var(--surface-blue)]"></span> Stable
             </div>
           </div>
         </motion.div>
       </div>
 
-      <div className="w-full h-[700px] relative px-6 md:px-12">
-        <div 
-          className="w-full h-full relative z-10 organic-mask"
-          style={{
-            maskImage: "url('data:image/svg+xml;utf8,<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"none\"><path d=\"M5.5,50 C5.5,25.42 25.42,5.5 50,5.5 C74.58,5.5 94.5,25.42 94.5,50 C94.5,74.58 74.58,94.5 50,94.5 C25.42,94.5 5.5,74.58 5.5,50 Z\" fill=\"black\"/></svg>')",
-            WebkitMaskImage: "url('data:image/svg+xml;utf8,<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"none\"><path d=\"M2,50 C2,15 15,2 50,2 C85,2 98,15 98,50 C98,85 85,98 50,98 C15,98 2,85 2,50 Z\" fill=\"black\"/></svg>')",
-            maskSize: '100% 100%',
-            WebkitMaskSize: '100% 100%'
-          }}
-        >
+      <div className="w-full h-[500px] relative px-6 md:px-12 mb-20">
+        <div className="w-full h-full relative z-10 water-mask rounded-[2rem] overflow-hidden border border-white/10">
           <MapContainer 
             center={[15, 100]} 
             zoom={3} 
             minZoom={2}
             scrollWheelZoom={false} 
-            className="w-full h-full bg-[var(--ink)]"
+            className="w-full h-full bg-[#e3e9eb]"
           >
-            {/* Extremely dark minimal map tiles */}
+            {/* Light minimal map tiles */}
             <TileLayer
               attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-              url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
-              opacity={0.7}
+              url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+              opacity={0.8}
             />
             
             {projects.map((project) => (
@@ -118,35 +123,34 @@ export const GlobalMap = () => {
                 icon={createCustomIcon(project.health)}
               >
                 <Popup className="custom-popup" closeButton={false}>
-                  <div className="w-[320px] rounded-[24px] overflow-hidden glass-dark p-1">
+                  <div className="w-[320px] rounded-[24px] overflow-hidden bg-white/90 backdrop-blur-xl border border-[var(--deep-blue)]/10 shadow-xl p-1">
                     <div className="h-40 w-full relative rounded-[1.3rem] overflow-hidden">
-                      <img src={project.image} alt={project.name} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                      <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/20">
-                        <Activity size={14} className={project.health === 'Critical' ? 'text-[var(--coral)]' : project.health === 'Recovering' ? 'text-[var(--coral-light)]' : 'text-[var(--seafoam)]'} /> 
+                      <img src={project.image} alt={project.name} className="w-full h-full object-cover water-mask" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-xs font-medium text-white border border-white/30">
+                        <Activity size={14} className={project.health === 'Critical' ? 'text-[var(--sunlight)]' : project.health === 'Recovering' ? 'text-[var(--ocean)]' : 'text-[var(--surface-blue)]'} /> 
                         {project.health}
                       </div>
                     </div>
                     <div className="p-5">
-                      <h4 className="text-xl font-heading text-[var(--sand)] mb-4 leading-tight">{project.name}</h4>
+                      <h4 className="text-xl font-heading text-[var(--deep-blue)] mb-4 leading-tight">{project.name}</h4>
                       
                       <div className="mb-6">
-                        <div className="flex justify-between text-xs text-white/50 mb-2 font-medium tracking-wide uppercase">
+                        <div className="flex justify-between text-xs text-[var(--ink)]/60 mb-2 font-medium tracking-wide uppercase">
                           <span>Restoration Progress</span>
-                          <span className="text-[var(--seafoam)]">{project.progress}%</span>
+                          <span className="text-[var(--surface-blue)] font-bold">{project.progress}%</span>
                         </div>
-                        <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div className="w-full h-1.5 bg-[var(--ink)]/5 rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-[var(--seafoam)] rounded-full relative"
+                            className="h-full bg-[var(--surface-blue)] rounded-full relative"
                             style={{ width: `${project.progress}%` }}
                           >
-                            <div className="absolute top-0 right-0 w-2 h-full bg-white blur-[2px]" />
                           </div>
                         </div>
                       </div>
                       
                       <Magnetic>
-                        <button className="w-full py-3 rounded-xl bg-[var(--sand)]/5 hover:bg-[var(--sand)]/10 transition-colors border border-[var(--sand)]/10 text-center text-sm text-[var(--sand)] font-medium flex items-center justify-center gap-2 group">
+                        <button className="w-full py-3 rounded-xl bg-[var(--deep-blue)]/5 hover:bg-[var(--surface-blue)]/10 transition-colors border border-[var(--deep-blue)]/5 text-center text-sm text-[var(--deep-blue)] font-semibold flex items-center justify-center gap-2 group link-flow pb-3">
                           View Deep Dive <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                         </button>
                       </Magnetic>
@@ -157,9 +161,48 @@ export const GlobalMap = () => {
             ))}
           </MapContainer>
         </div>
-        
-        {/* Glow behind map */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-[var(--ocean-deep)] blur-[120px] -z-10 rounded-full" />
+      </div>
+
+      {/* Program / Site Showcase Spec Cards */}
+      <div className="container mx-auto px-6 md:px-12 relative z-20">
+        <h3 className="text-3xl font-heading text-[var(--foam)] mb-8">Flagship Programs</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {projects.map((project, i) => (
+            <motion.div 
+              key={project.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.8, delay: i * 0.15 }}
+              className="bg-white/10 backdrop-blur-md rounded-[24px] border border-white/20 p-8 flex flex-col hover:bg-white/15 transition-colors duration-300"
+            >
+              <h4 className="text-2xl font-heading text-[var(--foam)] mb-6">{project.name}</h4>
+              
+              <div className="flex flex-col gap-4 text-sm text-[var(--foam)]/80">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <span className="flex items-center gap-2"><MapPin size={16} className="text-[var(--surface-blue)]" /> Location</span>
+                  <span className="font-medium text-[var(--foam)]">{project.lat > 0 ? 'Northern' : 'Southern'} Hemisphere</span>
+                </div>
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <span className="flex items-center gap-2"><Target size={16} className="text-[var(--surface-blue)]" /> Area Restored</span>
+                  <span className="font-medium text-[var(--foam)]">{project.area}</span>
+                </div>
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <span className="flex items-center gap-2"><Shield size={16} className="text-[var(--surface-blue)]" /> Species Monitored</span>
+                  <span className="font-medium text-[var(--foam)]">{project.species}</span>
+                </div>
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <span className="flex items-center gap-2"><Calendar size={16} className="text-[var(--surface-blue)]" /> Years Active</span>
+                  <span className="font-medium text-[var(--foam)]">{project.years} Yrs</span>
+                </div>
+                <div className="flex items-center justify-between pt-1">
+                  <span className="flex items-center gap-2"><Users size={16} className="text-[var(--surface-blue)]" /> Partners</span>
+                  <span className="font-medium text-[var(--foam)] text-right max-w-[120px] truncate" title={project.partners}>{project.partners}</span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       <style>{`
@@ -181,6 +224,11 @@ export const GlobalMap = () => {
           border: none;
         }
       `}</style>
+      
+      {/* Wave SVG divider at bottom */}
+      <div className="absolute bottom-0 left-0 w-full z-[5]">
+        <WaveDivider topColor="transparent" bottomColor="var(--depth-7)" />
+      </div>
     </section>
   );
 };

@@ -2,8 +2,9 @@ import { useRef, useEffect } from 'react';
 
 // Configuration
 const COLORS = {
-  seafoam: '#2EC4B6',
-  coral: '#FF6B5B'
+  surfaceBlue: '#7FB3D5',
+  ocean: '#1E6091',
+  sunlight: '#FFB86B'
 };
 
 interface WaveDot {
@@ -74,19 +75,22 @@ export const ParticleWaves = () => {
       boids = [];
 
       // 1. Initialize Wave Dots (3 bands)
-      // Band settings: [amplitude, frequency, speed, color, baseHeight, rows]
+      // Band settings: [amplitude, frequency, speed, color, height, rows]
       const bands = [
-        { amp: 40, freq: 0.003, speed: 0.015, color: COLORS.seafoam, height: canvas.height * 0.4, rows: 8, opacity: 0.3, size: 1.5 },
-        { amp: 70, freq: 0.002, speed: 0.02, color: COLORS.seafoam, height: canvas.height * 0.55, rows: 6, opacity: 0.5, size: 2 },
-        { amp: 100, freq: 0.0015, speed: 0.025, color: COLORS.coral, height: canvas.height * 0.75, rows: 5, opacity: 0.8, size: 2.5 }
+        { amp: 50, freq: 0.004, speed: 0.02, color: COLORS.surfaceBlue, height: canvas.height * 0.4, rows: 12, opacity: 0.3, size: 1.5 },
+        { amp: 90, freq: 0.003, speed: 0.03, color: COLORS.ocean, height: canvas.height * 0.55, rows: 10, opacity: 0.5, size: 2 },
+        { amp: 130, freq: 0.002, speed: 0.04, color: COLORS.surfaceBlue, height: canvas.height * 0.75, rows: 8, opacity: 0.8, size: 2.5 }
       ];
 
-      const xSpacing = 15;
-      const ySpacing = 12;
+      const xSpacing = 8;
+      const ySpacing = 8;
 
       bands.forEach((band, bIndex) => {
         for (let x = -50; x < canvas.width + 50; x += xSpacing) {
           for (let row = 0; row < band.rows; row++) {
+            // Occasional sunlight particle
+            const dotColor = Math.random() > 0.95 ? COLORS.sunlight : band.color;
+            
             waveDots.push({
               x: x,
               y: band.height + (row * ySpacing),
@@ -95,7 +99,7 @@ export const ParticleWaves = () => {
               vx: 0,
               vy: 0,
               waveIndex: bIndex,
-              color: band.color,
+              color: dotColor,
               size: band.size * (0.8 + Math.random() * 0.4),
               opacity: band.opacity * (1 - (row / band.rows) * 0.5) // fade out lower rows slightly
             });
@@ -104,7 +108,7 @@ export const ParticleWaves = () => {
       });
 
       // 2. Initialize Bubbles
-      for (let i = 0; i < 40; i++) {
+      for (let i = 0; i < 150; i++) {
         bubbles.push({
           x: Math.random() * canvas.width,
           y: canvas.height + Math.random() * 500,
@@ -140,14 +144,14 @@ export const ParticleWaves = () => {
     const animate = () => {
       time += 1;
       
-      // Clear background (using solid sand color)
-      ctx.fillStyle = '#FAF7F0';
+      // Clear background (using solid foam color)
+      ctx.fillStyle = '#EAF4F8';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const bands = [
-        { amp: 40, freq: 0.003, speed: 0.015, height: canvas.height * 0.4 },
-        { amp: 70, freq: 0.002, speed: 0.02, height: canvas.height * 0.55 },
-        { amp: 100, freq: 0.0015, speed: 0.025, height: canvas.height * 0.75 }
+        { amp: 50, freq: 0.004, speed: 0.02, height: canvas.height * 0.4 },
+        { amp: 90, freq: 0.003, speed: 0.03, height: canvas.height * 0.55 },
+        { amp: 130, freq: 0.002, speed: 0.04, height: canvas.height * 0.75 }
       ];
 
       // --- 1. Draw Wave Dots ---
@@ -214,7 +218,7 @@ export const ParticleWaves = () => {
 
         ctx.beginPath();
         ctx.arc(currentX, b.y, b.size, 0, Math.PI * 2);
-        ctx.fillStyle = COLORS.seafoam;
+        ctx.fillStyle = COLORS.surfaceBlue;
         ctx.globalAlpha = b.opacity * fadeRatio;
         ctx.fill();
       }
@@ -299,7 +303,7 @@ export const ParticleWaves = () => {
           const ry = offsetX * Math.sin(angle) + offsetY * Math.cos(angle);
           ctx.beginPath();
           ctx.arc(boid.x + rx, boid.y + ry, size, 0, Math.PI * 2);
-          ctx.fillStyle = COLORS.coral;
+          ctx.fillStyle = COLORS.ocean;
           ctx.globalAlpha = 0.7;
           ctx.fill();
         };

@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import CountUp from 'react-countup';
 import { Droplet, Users, Shield, MapPin } from 'lucide-react';
+import { WaveDivider } from '../components/ui/WaveDivider';
 
 const stats = [
   {
@@ -40,20 +41,10 @@ export const ImpactStats = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="relative py-28 bg-[var(--sand)] overflow-hidden">
-      {/* Wave SVG divider at top */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0]">
-        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" className="w-full h-[60px]">
-          <path
-            d="M0,40 C180,80 360,0 540,40 C720,80 900,0 1080,40 C1260,80 1440,20 1440,40 L1440,0 L0,0 Z"
-            fill="var(--ocean-deep)"
-            opacity="0.05"
-          />
-        </svg>
-      </div>
-
-      {/* Coral-branch background texture */}
-      <div className="absolute inset-0 coral-branch-bg opacity-40 pointer-events-none" />
+    <section id="impact" className="py-24 relative bg-[var(--depth-2)] z-10">
+      
+      {/* Wave Ambience */}
+      <div className="absolute top-0 right-0 w-full h-[500px] bg-gradient-to-b from-[var(--depth-2)] to-transparent pointer-events-none" />
 
       <div ref={ref} className="container mx-auto px-6 md:px-12 relative z-10">
         {/* Section header */}
@@ -90,23 +81,23 @@ export const ImpactStats = () => {
                 <div
                   className="w-full h-full blob-shape"
                   style={{
-                    background: i % 2 === 0 ? 'var(--seafoam)' : 'var(--coral)',
+                    background: i % 2 === 0 ? 'var(--surface-blue)' : 'var(--sunlight)',
                     animationDelay: `${i * 2}s`,
                   }}
                 />
               </div>
 
               {/* Icon */}
-              <div className="relative z-10 mb-6 w-14 h-14 flex items-center justify-center rounded-2xl bg-[var(--ocean-deep)]/5 group-hover:bg-[var(--coral)]/10 transition-colors duration-400">
+              <div className="relative z-10 mb-6 w-14 h-14 flex items-center justify-center rounded-2xl bg-[var(--deep-blue)]/5 group-hover:bg-[var(--sunlight)]/10 transition-colors duration-400">
                 <IconComponent
                   size={26}
                   strokeWidth={1.5}
-                  className="text-[var(--ocean-deep)] group-hover:text-[var(--coral)] transition-colors duration-400"
+                  className="text-[var(--deep-blue)] group-hover:text-[var(--sunlight)] transition-colors duration-400"
                 />
               </div>
 
               {/* Number */}
-              <div className="text-5xl md:text-6xl font-heading font-bold text-[var(--ocean-deep)] mb-3 tracking-tight flex items-baseline">
+                <div className="text-4xl md:text-5xl font-bold text-[var(--deep-blue)] mb-2 group-hover:scale-110 transition-transform duration-500 origin-left">
                 {isInView ? (
                   // @ts-ignore - Handle Vite CJS/ESM interop differences where CountUp might be an object
                   (CountUp.default || CountUp) && (
@@ -134,7 +125,7 @@ export const ImpactStats = () => {
                 ) : (
                   "0"
                 )}
-                <span className="text-3xl text-[var(--coral)] ml-1 font-semibold">
+                <span className="text-3xl text-[var(--sunlight)] ml-1 font-semibold">
                   {stat.suffix}
                 </span>
               </div>
@@ -149,15 +140,9 @@ export const ImpactStats = () => {
         </div>
       </div>
 
-      {/* Wave SVG divider at bottom */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] rotate-180">
-        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" className="w-full h-[60px]">
-          <path
-            d="M0,40 C240,0 480,80 720,40 C960,0 1200,80 1440,40 L1440,0 L0,0 Z"
-            fill="var(--ocean-deep)"
-            opacity="0.05"
-          />
-        </svg>
+      {/* Wave SVG divider at bottom to transition to TheCrisis (--depth-3) */}
+      <div className="absolute bottom-0 left-0 w-full z-[5]">
+        <WaveDivider topColor="transparent" bottomColor="var(--depth-3)" />
       </div>
     </section>
   );

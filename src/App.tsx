@@ -1,4 +1,3 @@
-
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { Hero } from './sections/Hero';
@@ -8,30 +7,35 @@ import { Mission } from './sections/Mission';
 import { GetInvolved } from './sections/GetInvolved';
 import { GlobalMap } from './sections/GlobalMap';
 import { Stories } from './sections/Stories';
+import { FAQ } from './sections/FAQ';
 import { FinalCTA } from './sections/FinalCTA';
+import { CausticLight } from './components/ui/CausticLight';
+import { AudioToggle } from './components/ui/AudioToggle';
 
-import { ReactLenis } from 'lenis/react';
+
 
 function App() {
   return (
-    <ReactLenis root>
-      <div className="bg-[var(--sand)] min-h-screen text-[var(--ink)] selection:bg-[var(--coral)]">
-        <Navbar />
-        
-        <main>
-          <Hero />
-          <ImpactStats />
-          <TheCrisis />
-          <Mission />
-          <GetInvolved />
-          <GlobalMap />
-          <Stories />
-          <FinalCTA />
-        </main>
+    <div className="bg-[var(--foam)] min-h-screen text-[var(--ink)]">
+      <CausticLight />
+      <AudioToggle />
+      
+      <Navbar />
+      
+      <main>
+        <Hero />
+        <ImpactStats />
+        <TheCrisis />
+        <Mission />
+        <GetInvolved />
+        <GlobalMap />
+        <Stories />
+        <FAQ />
+        <FinalCTA />
+      </main>
 
-        <Footer />
-      </div>
-    </ReactLenis>
+      <Footer />
+    </div>
   );
 }
 

@@ -22,26 +22,25 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     
     const variants = {
       primary:
-        'bg-[var(--coral)] text-white ' +
-        'shadow-[0_4px_14px_rgba(255,107,91,0.3)] ' +
-        'hover:shadow-[0_0_24px_rgba(255,107,91,0.4)] ' +
-        'hover:brightness-110',
+        'bg-[var(--sunlight)] text-[var(--abyss)] ' +
+        'shadow-[0_4px_14px_rgba(255,184,107,0.3)] ' +
+        'hover:shadow-[0_0_24px_rgba(255,184,107,0.5)] ' +
+        'hover:brightness-110 font-bold',
       secondary:
-        'bg-[var(--seafoam)] text-white ' +
-        'shadow-[0_4px_14px_rgba(46,196,182,0.25)] ' +
-        'hover:shadow-[0_0_24px_rgba(46,196,182,0.35)]',
+        'border-2 border-[var(--deep-blue)] text-[var(--deep-blue)] bg-transparent ' +
+        'hover:bg-[var(--surface-blue)]/10',
       outline:
-        'border-2 border-[var(--ocean-deep)] text-[var(--ocean-deep)] bg-transparent ' +
-        'hover:bg-[var(--seafoam)]/10 hover:border-[var(--seafoam)]',
+        'border-2 border-[var(--deep-blue)] text-[var(--deep-blue)] bg-transparent ' +
+        'hover:bg-[var(--surface-blue)]/10',
       ghost:
-        'text-[var(--ocean-deep)] bg-transparent ' +
-        'hover:bg-[var(--ocean-deep)]/5',
+        'text-[var(--deep-blue)] bg-transparent ' +
+        'hover:bg-[var(--deep-blue)]/5',
     };
 
     const sizes = {
       sm: 'px-6 py-2.5 text-sm',
       md: 'px-8 py-3.5 text-base',
-      lg: 'px-10 py-5 text-lg font-medium',
+      lg: 'px-10 py-5 text-lg',
     };
 
     return (

@@ -1,172 +1,111 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Leaf, AlertTriangle, Trash2, Heart } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Leaf, Thermometer, Droplets, Skull, Heart } from 'lucide-react';
+import { WaveDivider } from '../components/ui/WaveDivider';
 
 const stages = [
   {
-    id: 'healthy',
-    num: '01',
-    title: 'A Vibrant World',
-    description: 'Coral reefs are the rainforests of the sea, teeming with life and brilliant colors.',
-    color: '#2EC4B6', // Seafoam
+    id: 'thriving',
+    title: 'A Thriving Reef',
+    description: 'Coral reefs are the rainforests of the sea. They cover just 1% of the ocean floor but support 25% of all marine life in a vibrant, balanced ecosystem.',
     icon: Leaf,
+    textColor: 'var(--deep-blue)'
+  },
+  {
+    id: 'warming',
+    title: 'Rising Temperatures',
+    description: 'Even a 1°C spike in ocean temperature causes acute stress. The delicate symbiotic relationship between the coral and its algae begins to fracture.',
+    icon: Thermometer,
+    textColor: 'var(--deep-blue)'
   },
   {
     id: 'bleaching',
-    num: '02',
-    title: 'The Silent Loss',
-    description: 'Rising ocean temperatures cause corals to expel the algae living in their tissues, turning them completely white.',
-    color: '#FAF7F0', // Sand
-    icon: AlertTriangle,
+    title: 'Bleaching Begins',
+    description: 'Under severe stress, corals expel their colorful algae. They turn bone white, starving themselves of their primary food source. They are alive, but barely.',
+    icon: Droplets,
+    textColor: 'var(--foam)'
   },
   {
-    id: 'plastic',
-    num: '03',
-    title: 'Choked by Pollution',
-    description: 'Millions of tons of plastic enter our oceans annually, entangling marine life and blocking sunlight.',
-    color: '#FF6B5B', // Coral
-    icon: Trash2,
+    id: 'collapse',
+    title: 'Collapse',
+    description: 'Without intervention, the coral starves. The vibrant ecosystem collapses into a desolate graveyard, devastating the marine life that relied on it.',
+    icon: Skull,
+    textColor: 'var(--foam)'
   },
   {
-    id: 'hope',
-    num: '04',
-    title: 'The Return of Hope',
-    description: 'Through conservation, restoration, and your help, reefs can recover and thrive once more.',
-    color: '#FF9F80', // Coral Light
+    id: 'restoration',
+    title: 'Restoration',
+    description: 'This is where we step in. Through active planting, we can accelerate coral growth by up to 50x and bring these vital ecosystems back to life.',
     icon: Heart,
+    textColor: 'var(--deep-blue)'
   }
 ];
 
 export const TheCrisis = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const bgTextRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const cards = cardsRef.current;
-      const bgs = bgTextRef.current;
-      
-      // Pin the section and animate background color / elements
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: 'top top',
-        end: `+=${cards.length * 100}%`,
-        pin: true,
-        scrub: 1,
-      });
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"]
+  });
 
-      cards.forEach((card, i) => {
-        if (i === 0) return; // First card is already visible
-        
-        // Setup fade in for content
-        gsap.fromTo(card,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: `top+=${(i - 0.4) * window.innerHeight} top`,
-              end: `top+=${(i - 0.1) * window.innerHeight} top`,
-              scrub: 1,
-            }
-          }
-        );
-        
-        // Setup fade out for previous content
-        gsap.to(cards[i - 1], {
-          opacity: 0,
-          y: -30,
-          ease: "power2.in",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: `top+=${(i - 0.9) * window.innerHeight} top`,
-            end: `top+=${(i - 0.6) * window.innerHeight} top`,
-            scrub: 1,
-          }
-        });
-
-        // Background typography transitions
-        gsap.fromTo(bgs[i],
-          { opacity: 0, y: 100 },
-          {
-            opacity: 0.05,
-            y: 0,
-            ease: "none",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: `top+=${(i - 0.6) * window.innerHeight} top`,
-              end: `top+=${(i - 0.1) * window.innerHeight} top`,
-              scrub: 1,
-            }
-          }
-        );
-
-        gsap.to(bgs[i - 1], {
-          opacity: 0,
-          y: -100,
-          ease: "none",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: `top+=${(i - 0.6) * window.innerHeight} top`,
-            end: `top+=${(i - 0.1) * window.innerHeight} top`,
-            scrub: 1,
-          }
-        });
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+  // Interpolating exact hex codes so Framer Motion can calculate the transition smoothly
+  // Depth-3 (approx): #BFE0F2
+  // Surface Blue: #7FB3D5
+  // Slate 400 (desaturated): #94A3B8
+  // Slate 700 (dark): #334155
+  // Foam: #EAF4F8
+  const backgroundColor = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.5, 0.75, 1],
+    [
+      "#BFE0F2",
+      "#7FB3D5",
+      "#94A3B8",
+      "#334155",
+      "#EAF4F8"
+    ]
+  );
 
   return (
-    <section ref={containerRef} id="the-crisis" className="relative h-screen w-full overflow-hidden bg-[var(--ocean-deep)] flex items-center justify-center">
-      
-      {/* Massive Background Typography */}
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none z-0">
-        {stages.map((stage, index) => (
-          <div 
-            key={`bg-${stage.id}`}
-            ref={el => { bgTextRef.current[index] = el; }}
-            className="absolute text-[30vw] font-heading font-bold text-[var(--sand)] leading-none whitespace-nowrap"
-            style={{ opacity: index === 0 ? 0.05 : 0 }}
-          >
-            {stage.num}
-          </div>
-        ))}
-      </div>
-
-      <div className="container mx-auto px-6 relative z-10 w-full h-full flex flex-col justify-center items-center">
-        <div ref={textRef} className="relative w-full max-w-4xl h-[60vh]">
-          {stages.map((stage, index) => {
-            const StageIcon = stage.icon;
-            return (
-            <div 
+    <motion.section 
+      id="crisis" 
+      ref={containerRef}
+      style={{ backgroundColor }}
+      className="relative w-full overflow-hidden"
+    >
+      <div className="container mx-auto px-6 relative z-10 w-full flex flex-col items-center py-20">
+        
+        {stages.map((stage, index) => {
+          const StageIcon = stage.icon;
+          
+          return (
+            <motion.div 
               key={stage.id}
-              ref={el => { cardsRef.current[index] = el; }}
-              className="absolute inset-0 flex flex-col justify-center items-center text-center"
-              style={{ opacity: index === 0 ? 1 : 0 }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="relative flex flex-col justify-center items-center text-center w-full max-w-4xl min-h-[85vh]"
             >
-              <div className="mb-10 p-5 rounded-full inline-flex glass-dark shadow-2xl" style={{ borderColor: `${stage.color}40` }}>
-                <StageIcon size={36} color={stage.color} strokeWidth={1} />
+              <div className="mb-8 p-6 rounded-full inline-flex bg-white/10 backdrop-blur-md shadow-xl border border-white/20">
+                <StageIcon size={40} style={{ color: stage.textColor }} strokeWidth={1.5} />
               </div>
-              <h2 className="text-5xl md:text-8xl font-heading mb-6 tracking-tight" style={{ color: stage.color }}>
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-heading mb-6 tracking-tight" style={{ color: stage.textColor }}>
                 {stage.title}
               </h2>
-              <p className="text-xl md:text-3xl text-[var(--sand)]/70 max-w-2xl font-light leading-relaxed">
+              <p className="text-xl md:text-2xl lg:text-3xl max-w-2xl font-normal leading-relaxed opacity-80" style={{ color: stage.textColor }}>
                 {stage.description}
               </p>
-            </div>
-            );
-          })}
-        </div>
+            </motion.div>
+          );
+        })}
       </div>
-    </section>
+      
+      {/* Wave SVG divider at bottom to transition to Mission (--depth-4) */}
+      <div className="absolute bottom-0 left-0 w-full z-[5]">
+        <WaveDivider topColor="transparent" bottomColor="var(--depth-4)" />
+      </div>
+    </motion.section>
   );
 };

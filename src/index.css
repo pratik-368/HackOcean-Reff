@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-sand: #FAF7F0;
-  --color-ocean-deep: #0B4F6C;
-  --color-coral: #FF6B5B;
-  --color-coral-light: #FF9F80;
-  --color-seafoam: #2EC4B6;
-  --color-ink: #14293A;
+  --color-abyss: #041C32;
+  --color-deep-blue: #0B4F6C;
+  --color-ocean: #1E6091;
+  --color-surface-blue: #7FB3D5;
+  --color-foam: #EAF4F8;
+  --color-sunlight: #FFB86B;
+  --color-ink: #0D1B2A;
   
   --font-heading: 'Fraunces', serif;
   --font-body: 'Inter', sans-serif;
@@ -14,12 +15,24 @@
 
 @layer base {
   :root {
-    --sand: #FAF7F0;
-    --ocean-deep: #0B4F6C;
-    --coral: #FF6B5B;
-    --coral-light: #FF9F80;
-    --seafoam: #2EC4B6;
-    --ink: #14293A;
+    --abyss: #041C32;
+    --deep-blue: #0B4F6C;
+    --ocean: #1E6091;
+    --surface-blue: #7FB3D5;
+    --foam: #EAF4F8;
+    --sunlight: #FFB86B;
+    --ink: #0D1B2A;
+
+    /* Descent Rhythm */
+    --depth-1: var(--foam);
+    --depth-2: color-mix(in srgb, var(--foam) 40%, var(--surface-blue));
+    --depth-3: var(--surface-blue);
+    --depth-4: color-mix(in srgb, var(--surface-blue) 40%, var(--ocean));
+    --depth-5: var(--ocean);
+    --depth-6: color-mix(in srgb, var(--ocean) 40%, var(--deep-blue));
+    --depth-7: var(--deep-blue);
+    --depth-8: color-mix(in srgb, var(--deep-blue) 40%, var(--abyss));
+    --depth-9: var(--abyss);
   }
   
   html {
@@ -27,7 +40,7 @@
   }
 
   body {
-    background-color: var(--sand);
+    background-color: var(--foam);
     color: var(--ink);
     font-family: 'Inter', sans-serif;
     font-size: 1.125rem;
@@ -42,7 +55,7 @@
     font-weight: 700;
     font-size: clamp(2.5rem, 6vw, 5rem);
     line-height: 1.05;
-    color: var(--ocean-deep);
+    color: var(--deep-blue);
     font-feature-settings: 'opsz' auto;
     font-variation-settings: 'opsz' 144;
   }
@@ -52,61 +65,61 @@
     font-weight: 600;
     font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.1;
-    color: var(--ocean-deep);
+    color: var(--deep-blue);
     font-feature-settings: 'opsz' auto;
   }
 
   h3, h4, h5, h6 {
     font-family: 'Fraunces', serif;
     font-weight: 500;
-    color: var(--ocean-deep);
+    color: var(--deep-blue);
     font-feature-settings: 'opsz' auto;
   }
 
   ::selection {
-    background-color: var(--coral);
-    color: var(--sand);
+    background-color: rgba(255, 184, 107, 0.25); /* sunlight at 25% */
+    color: var(--ink);
   }
 }
 
 @layer utilities {
   /* Frosted glass for navbar */
   .glass-nav {
-    background: rgba(250, 247, 240, 0.8);
+    background: rgba(234, 244, 248, 0.8);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid rgba(11, 79, 108, 0.08);
-    box-shadow: 0 1px 3px rgba(20, 41, 58, 0.04);
+    box-shadow: 0 1px 3px rgba(13, 27, 42, 0.04);
   }
 
   /* Glass for dark sections */
   .glass-dark {
-    background: rgba(11, 79, 108, 0.6);
+    background: rgba(4, 28, 50, 0.6);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(127, 179, 213, 0.2);
   }
 
-  /* Reef card: organic corners, coral-tinted shadow, seafoam border */
+  /* Reef card: organic corners, ocean shadow, surface-blue border */
   .reef-card {
     border-radius: 24px;
-    box-shadow: 0 8px 30px rgba(255, 107, 91, 0.15);
-    border: 1px solid rgba(46, 196, 182, 0.3);
-    background: var(--sand);
+    box-shadow: 0 8px 30px rgba(30, 96, 145, 0.1);
+    border: 1px solid rgba(127, 179, 213, 0.3);
+    background: var(--foam);
     transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1),
                 box-shadow 0.5s cubic-bezier(0.19, 1, 0.22, 1);
   }
 
   .reef-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 16px 48px rgba(255, 107, 91, 0.25);
+    box-shadow: 0 16px 48px rgba(30, 96, 145, 0.15);
   }
 
   /* Dark reef card variant */
   .reef-card-dark {
     border-radius: 28px;
-    box-shadow: 0 8px 30px rgba(255, 107, 91, 0.12);
-    border: 1px solid rgba(46, 196, 182, 0.2);
+    box-shadow: 0 8px 30px rgba(4, 28, 50, 0.2);
+    border: 1px solid rgba(127, 179, 213, 0.15);
     background: rgba(11, 79, 108, 0.95);
     transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1),
                 box-shadow 0.5s cubic-bezier(0.19, 1, 0.22, 1);
@@ -114,24 +127,24 @@
 
   .reef-card-dark:hover {
     transform: translateY(-6px);
-    box-shadow: 0 20px 60px rgba(255, 107, 91, 0.2);
+    box-shadow: 0 20px 60px rgba(4, 28, 50, 0.3);
   }
 
   .text-shadow-hero {
-    text-shadow: 0 4px 24px rgba(11, 79, 108, 0.15);
+    text-shadow: 0 4px 24px rgba(11, 79, 108, 0.2);
   }
 
-  .text-glow-seafoam {
-    text-shadow: 0 0 30px rgba(46, 196, 182, 0.35);
+  .text-glow-surface {
+    text-shadow: 0 0 30px rgba(127, 179, 213, 0.35);
   }
 
-  .text-glow-coral {
-    text-shadow: 0 0 30px rgba(255, 107, 91, 0.35);
+  .text-glow-sunlight {
+    text-shadow: 0 0 30px rgba(255, 184, 107, 0.4);
   }
 
-  /* Coral-branch line-art background at 5-8% opacity */
+  /* Coral-branch line-art background */
   .coral-branch-bg {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400' opacity='0.06'%3E%3Cpath d='M200 380 C200 280 160 240 120 200 C80 160 60 140 80 100 C100 60 140 40 180 60 C200 70 200 90 180 100 C160 110 140 90 160 80' fill='none' stroke='%23FF6B5B' stroke-width='2'/%3E%3Cpath d='M200 380 C200 300 240 260 280 220 C320 180 340 140 320 100 C300 60 260 50 240 70 C220 90 230 110 250 100 C270 90 260 70 240 80' fill='none' stroke='%23FF6B5B' stroke-width='1.5'/%3E%3Cpath d='M200 300 C180 260 140 250 120 260 C100 270 110 290 130 280' fill='none' stroke='%23FF6B5B' stroke-width='1'/%3E%3Cpath d='M200 320 C220 290 260 280 280 290 C300 300 290 320 270 310' fill='none' stroke='%23FF6B5B' stroke-width='1'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400' opacity='0.08'%3E%3Cpath d='M200 380 C200 280 160 240 120 200 C80 160 60 140 80 100 C100 60 140 40 180 60 C200 70 200 90 180 100 C160 110 140 90 160 80' fill='none' stroke='%237FB3D5' stroke-width='2'/%3E%3Cpath d='M200 380 C200 300 240 260 280 220 C320 180 340 140 320 100 C300 60 260 50 240 70 C220 90 230 110 250 100 C270 90 260 70 240 80' fill='none' stroke='%237FB3D5' stroke-width='1.5'/%3E%3Cpath d='M200 300 C180 260 140 250 120 260 C100 270 110 290 130 280' fill='none' stroke='%237FB3D5' stroke-width='1'/%3E%3Cpath d='M200 320 C220 290 260 280 280 290 C300 300 290 320 270 310' fill='none' stroke='%237FB3D5' stroke-width='1'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 400px 400px;
   }
@@ -139,6 +152,36 @@
   .blob-shape {
     border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
     animation: morph 12s ease-in-out infinite;
+  }
+
+  /* Flowing Underline */
+  .link-flow {
+    position: relative;
+    text-decoration: none;
+  }
+  .link-flow::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--surface-blue);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .link-flow:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Water Mask */
+  .water-mask {
+    clip-path: path('M12.9,73.1C-3.4,56.8,-1.7,28.8,17.2,14.6C36,0.3,62,-0.2,77.5,12.7C93,25.6,98.1,51.8,84.9,69.5C71.8,87.2,40.4,91.3,12.9,73.1Z');
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M83.5,23.5C90.5,33.5,92.5,47.5,88.5,61.5C84.5,75.5,74.5,89.5,58.5,94.5C42.5,99.5,20.5,95.5,9.5,82.5C-1.5,69.5,-1.5,47.5,6.5,32.5C14.5,17.5,29.5,9.5,45.5,6.5C61.5,3.5,76.5,13.5,83.5,23.5Z' fill='black' /%3E%3C/svg%3E");
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
   }
 }
 
@@ -168,6 +211,18 @@
   100% { background-position: 0% 50%; }
 }
 
+@keyframes wave-drift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes current-drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(15px, 8px) rotate(1deg); }
+  50% { transform: translate(5px, 15px) rotate(-1deg); }
+  75% { transform: translate(-10px, 5px) rotate(0.5deg); }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -191,6 +246,16 @@
   background-size: 300% 300%;
 }
 
+.animate-wave-drift {
+  animation: wave-drift 20s linear infinite;
+  /* SVG must be 200% width to seamlessly loop when translated by -50% */
+  width: 200% !important;
+}
+
+.animate-current-drift {
+  animation: current-drift 12s ease-in-out infinite;
+}
+
 /* ============================
    CUSTOM SCROLLBAR
    ============================ */
@@ -199,14 +264,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--sand);
+  background: var(--foam);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(11, 79, 108, 0.15);
+  background: var(--surface-blue);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--seafoam);
+  background: var(--deep-blue);
 }

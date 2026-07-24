@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '../components/ui/Button';
 import { ChevronDown } from 'lucide-react';
 import { ParticleWaves } from '../components/canvas/ParticleWaves';
+import { WaveDivider } from '../components/ui/WaveDivider';
 
 export const Hero = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -17,25 +18,14 @@ export const Hero = () => {
   return (
     <section 
       ref={ref}
-      className="relative min-h-screen w-full flex items-center overflow-hidden bg-[var(--sand)]"
+      className="relative min-h-screen w-full flex flex-col justify-between overflow-hidden bg-[var(--foam)]"
     >
       {/* Ocean Particle Waves System */}
       <ParticleWaves />
 
-      {/* Subtle looping SVG wave at the bottom */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden z-[5]">
-        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="w-full h-[80px]">
-          <path
-            d="M0,60 C240,120 480,0 720,60 C960,120 1200,0 1440,60 L1440,120 L0,120 Z"
-            fill="var(--sand)"
-            opacity="0.6"
-          />
-          <path
-            d="M0,80 C360,20 720,100 1080,40 C1260,20 1380,50 1440,80 L1440,120 L0,120 Z"
-            fill="var(--sand)"
-            opacity="0.9"
-          />
-        </svg>
+      {/* Wave SVG divider at bottom to transition to ImpactStats (--depth-2) */}
+      <div className="absolute bottom-0 left-0 w-full z-[5]">
+        <WaveDivider topColor="transparent" bottomColor="var(--depth-2)" />
       </div>
 
       {/* ===== CONTENT — LEFT-ALIGNED ===== */}
@@ -51,10 +41,10 @@ export const Hero = () => {
             transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
             className="mb-6 flex flex-col items-start gap-4"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--ocean-deep)]/5 border border-[var(--ocean-deep)]/10 text-xs font-semibold tracking-widest text-[var(--ocean-deep)] uppercase">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--deep-blue)]/5 border border-[var(--deep-blue)]/10 text-xs font-semibold tracking-widest text-[var(--deep-blue)] uppercase">
               In partnership with Global Ocean Trust
             </div>
-            <div className="text-[var(--seafoam)] font-medium text-sm tracking-wide">
+            <div className="text-[var(--surface-blue)] font-bold text-sm tracking-wide">
               Est. 2019 &middot; 40+ Reefs Restored
             </div>
           </motion.div>
@@ -66,7 +56,7 @@ export const Hero = () => {
           >
             <h1 className="mb-6">
               Protect What <br />
-              <span className="text-glow-seafoam">Sustains</span> Us.
+              <span className="text-glow-surface text-[var(--ocean)]">Sustains</span> Us.
             </h1>
           </motion.div>
 
@@ -102,11 +92,11 @@ export const Hero = () => {
         transition={{ delay: 1.2, duration: 1 }}
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20"
       >
-        <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--ocean-deep)]/40 font-medium">Scroll to explore</span>
+        <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--deep-blue)]/40 font-medium">Scroll to explore</span>
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="text-[var(--seafoam)]"
+          className="text-[var(--surface-blue)]"
         >
           <ChevronDown size={20} strokeWidth={1.5} />
         </motion.div>

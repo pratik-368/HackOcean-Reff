@@ -227,7 +227,7 @@ export const GlobalMap = () => {
       
       {/* Wave SVG divider at bottom */}
       <div className="absolute bottom-0 left-0 w-full z-[5]">
-        <WaveDivider topColor="transparent" bottomColor="var(--depth-7)" />
+        <WaveDivider />
       </div>
     </section>
   );

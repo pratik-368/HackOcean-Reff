@@ -91,7 +91,7 @@ export const FAQ = () => {
       {/* Wave SVG divider at bottom */}
       <div className="absolute bottom-0 left-0 w-full z-[5]">
         {/* We need to transition to Final CTA which is --depth-8 */}
-        <WaveDivider topColor="transparent" bottomColor="var(--depth-8)" />
+        <WaveDivider />
       </div>
     </section>
   );

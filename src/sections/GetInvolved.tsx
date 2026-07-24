@@ -212,7 +212,7 @@ export const GetInvolved = () => {
 
       {/* Wave SVG divider at bottom */}
       <div className="absolute bottom-0 left-0 w-full z-[5]">
-        <WaveDivider topColor="transparent" bottomColor="var(--depth-6)" />
+        <WaveDivider />
       </div>
     </section>
   );

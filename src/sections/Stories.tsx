@@ -88,7 +88,7 @@ export const Stories = () => {
 
       {/* Wave SVG divider at bottom to transition to Final CTA (--depth-8) */}
       <div className="absolute bottom-0 left-0 w-full z-[5]">
-        <WaveDivider topColor="transparent" bottomColor="var(--depth-8)" />
+        <WaveDivider />
       </div>
     </section>
   );

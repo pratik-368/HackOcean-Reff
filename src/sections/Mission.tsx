@@ -113,7 +113,7 @@ export const Mission = () => {
 
       {/* Wave SVG divider at bottom to transition to GetInvolved (--depth-5) */}
       <div className="absolute bottom-0 left-0 w-full z-[5]">
-        <WaveDivider topColor="transparent" bottomColor="var(--depth-5)" />
+        <WaveDivider />
       </div>
     </section>
   );

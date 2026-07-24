@@ -7,17 +7,16 @@ const COLORS = {
   sunlight: '#FFB86B'
 };
 
-interface WaveDot {
+interface ShapeParticle {
   x: number;
   y: number;
-  baseX: number;
-  baseYOffset: number; // offset within the band
-  vx: number;
-  vy: number;
-  waveIndex: number;
+  startX: number;
+  startY: number;
+  targetX: number;
+  targetY: number;
   color: string;
   size: number;
-  opacity: number;
+  speedOffset: number; // for breathing/sway
 }
 
 interface Bubble {
@@ -30,13 +29,6 @@ interface Bubble {
   opacity: number;
 }
 
-interface Boid {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-}
-
 export const ParticleWaves = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
@@ -44,24 +36,56 @@ export const ParticleWaves = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     
-    const ctx = canvas.getContext('2d', { alpha: false });
+    const ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: true });
     if (!ctx) return;
 
     let animationFrameId: number;
     let time = 0;
+    let startTime = Date.now();
     
-    // Arrays
-    let waveDots: WaveDot[] = [];
+    let mantaParticles: ShapeParticle[] = [];
+    let coralParticles: ShapeParticle[] = [];
     let bubbles: Bubble[] = [];
-    let boids: Boid[] = [];
     
-    let mouse = { x: -1000, y: -1000, radius: 200, active: false };
+    let mouse = { x: -1000, y: -1000, radius: 150, active: false };
 
-    // Boids Settings
-    const numBoids = 12;
-    const maxSpeed = 1.5;
-    const maxForce = 0.03;
-    const perceptionRadius = 100;
+    // Function to extract pixels from drawn shapes
+    const getShapeTargets = (
+      drawFn: (ctx: CanvasRenderingContext2D) => void, 
+      width: number, 
+      height: number, 
+      sampleRate: number,
+      targetCount: number
+    ) => {
+      const offscreen = document.createElement('canvas');
+      offscreen.width = width;
+      offscreen.height = height;
+      const oCtx = offscreen.getContext('2d', { willReadFrequently: true });
+      if (!oCtx) return [];
+
+      oCtx.clearRect(0, 0, width, height);
+      drawFn(oCtx);
+
+      const imgData = oCtx.getImageData(0, 0, width, height).data;
+      const targets = [];
+      
+      for (let y = 0; y < height; y += sampleRate) {
+        for (let x = 0; x < width; x += sampleRate) {
+          const idx = (y * width + x) * 4;
+          if (imgData[idx + 3] > 128) { // if alpha > 50%
+            targets.push({ x, y });
+          }
+        }
+      }
+
+      // Shuffle and slice to targetCount
+      for (let i = targets.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [targets[i], targets[j]] = [targets[j], targets[i]];
+      }
+
+      return targets.slice(0, targetCount);
+    };
 
     const init = () => {
       const parent = canvas.parentElement;
@@ -69,45 +93,96 @@ export const ParticleWaves = () => {
       
       canvas.width = parent.clientWidth;
       canvas.height = parent.clientHeight;
-      
-      waveDots = [];
-      bubbles = [];
-      boids = [];
+      startTime = Date.now();
 
-      // 1. Initialize Wave Dots (3 bands)
-      // Band settings: [amplitude, frequency, speed, color, height, rows]
-      const bands = [
-        { amp: 50, freq: 0.004, speed: 0.02, color: COLORS.surfaceBlue, height: canvas.height * 0.4, rows: 12, opacity: 0.3, size: 1.5 },
-        { amp: 90, freq: 0.003, speed: 0.03, color: COLORS.ocean, height: canvas.height * 0.55, rows: 10, opacity: 0.5, size: 2 },
-        { amp: 130, freq: 0.002, speed: 0.04, color: COLORS.surfaceBlue, height: canvas.height * 0.75, rows: 8, opacity: 0.8, size: 2.5 }
-      ];
+      const scaleFactor = Math.min(1, canvas.width / 1200);
 
-      const xSpacing = 8;
-      const ySpacing = 8;
+      // --- 1. Generate Manta Ray Targets ---
+      const mantaWidth = 600 * scaleFactor;
+      const mantaHeight = 600 * scaleFactor;
+      const mantaTargets = getShapeTargets((oCtx) => {
+        oCtx.scale(mantaWidth / 100, mantaHeight / 100);
+        const path = new Path2D(`
+          M 50 10 
+          C 55 10, 60 15, 65 25 
+          C 80 30, 95 45, 95 60 
+          C 85 60, 70 55, 55 65 
+          C 55 80, 52 90, 50 95 
+          C 48 90, 45 80, 45 65 
+          C 30 55, 15 60, 5 60 
+          C 5 45, 20 30, 35 25 
+          C 40 15, 45 10, 50 10 Z
+        `);
+        oCtx.fillStyle = '#000';
+        oCtx.fill(path);
+      }, mantaWidth, mantaHeight, 3, 3000);
 
-      bands.forEach((band, bIndex) => {
-        for (let x = -50; x < canvas.width + 50; x += xSpacing) {
-          for (let row = 0; row < band.rows; row++) {
-            // Occasional sunlight particle
-            const dotColor = Math.random() > 0.95 ? COLORS.sunlight : band.color;
-            
-            waveDots.push({
-              x: x,
-              y: band.height + (row * ySpacing),
-              baseX: x,
-              baseYOffset: (row - band.rows/2) * ySpacing,
-              vx: 0,
-              vy: 0,
-              waveIndex: bIndex,
-              color: dotColor,
-              size: band.size * (0.8 + Math.random() * 0.4),
-              opacity: band.opacity * (1 - (row / band.rows) * 0.5) // fade out lower rows slightly
-            });
-          }
-        }
+      // Position Manta on the right side
+      const mantaOffsetX = canvas.width * 0.9 - mantaWidth;
+      const mantaOffsetY = canvas.height * 0.15;
+
+      mantaParticles = mantaTargets.map(t => {
+        const isSunlight = Math.random() > 0.85;
+        return {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          startX: Math.random() * canvas.width,
+          startY: Math.random() * canvas.height + 500, // come from below
+          targetX: t.x + mantaOffsetX,
+          targetY: t.y + mantaOffsetY,
+          color: isSunlight ? COLORS.sunlight : COLORS.surfaceBlue,
+          size: Math.random() * 1.5 + 0.5,
+          speedOffset: Math.random() * Math.PI * 2
+        };
       });
 
-      // 2. Initialize Bubbles
+      // --- 2. Generate Coral Targets ---
+      const coralWidth = 400 * scaleFactor;
+      const coralHeight = 400 * scaleFactor;
+      const coralTargets = getShapeTargets((oCtx) => {
+        oCtx.scale(coralWidth / 100, coralHeight / 100);
+        oCtx.lineCap = 'round';
+        oCtx.lineJoin = 'round';
+        oCtx.lineWidth = 6;
+        oCtx.strokeStyle = '#000';
+        
+        oCtx.beginPath();
+        oCtx.moveTo(50, 100); // base
+        oCtx.lineTo(50, 70);
+        oCtx.lineTo(30, 40);
+        oCtx.moveTo(50, 70);
+        oCtx.lineTo(70, 45);
+        oCtx.lineTo(85, 20);
+        oCtx.moveTo(70, 45);
+        oCtx.lineTo(55, 25);
+        oCtx.moveTo(50, 85);
+        oCtx.lineTo(25, 75);
+        oCtx.moveTo(50, 60);
+        oCtx.lineTo(60, 60);
+        oCtx.lineTo(75, 75);
+        oCtx.stroke();
+      }, coralWidth, coralHeight, 3, 1200);
+
+      // Position Coral on the bottom left
+      const coralOffsetX = canvas.width * 0.1;
+      const coralOffsetY = canvas.height - coralHeight * 0.8;
+
+      coralParticles = coralTargets.map(t => {
+        return {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          startX: Math.random() * canvas.width - 200, // come from sides
+          startY: Math.random() * canvas.height + 200,
+          targetX: t.x + coralOffsetX,
+          targetY: t.y + coralOffsetY,
+          color: COLORS.ocean,
+          size: Math.random() * 1.5 + 0.8,
+          speedOffset: Math.random() * Math.PI * 2
+        };
+      });
+
+      // --- 3. Initialize Background Bubbles ---
+      bubbles = [];
       for (let i = 0; i < 150; i++) {
         bubbles.push({
           x: Math.random() * canvas.width,
@@ -119,98 +194,32 @@ export const ParticleWaves = () => {
           opacity: Math.random() * 0.5 + 0.1
         });
       }
-
-      // 3. Initialize Boids (Fish)
-      for (let i = 0; i < numBoids; i++) {
-        boids.push({
-          x: canvas.width * 0.2 + Math.random() * canvas.width * 0.6,
-          y: canvas.height * 0.3 + Math.random() * canvas.height * 0.4,
-          vx: (Math.random() - 0.5) * maxSpeed,
-          vy: (Math.random() - 0.5) * maxSpeed
-        });
-      }
     };
 
-    // Helper: Boids Math
-    const limit = (vector: {vx: number, vy: number}, max: number) => {
-      const magSq = vector.vx * vector.vx + vector.vy * vector.vy;
-      if (magSq > max * max) {
-        const mag = Math.sqrt(magSq);
-        vector.vx = (vector.vx / mag) * max;
-        vector.vy = (vector.vy / mag) * max;
-      }
-    };
+    // Easing function for assembly (easeOutExpo)
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
     const animate = () => {
-      time += 1;
+      time += 0.02;
+      
+      const elapsed = Date.now() - startTime;
+      const assembleProgress = Math.min(1, elapsed / 2500); // 2.5 second assembly
+      const ease = easeOutCubic(assembleProgress);
       
       // Clear background (using solid foam color)
       ctx.fillStyle = '#EAF4F8';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const bands = [
-        { amp: 50, freq: 0.004, speed: 0.02, height: canvas.height * 0.4 },
-        { amp: 90, freq: 0.003, speed: 0.03, height: canvas.height * 0.55 },
-        { amp: 130, freq: 0.002, speed: 0.04, height: canvas.height * 0.75 }
-      ];
-
-      // --- 1. Draw Wave Dots ---
-      for (let i = 0; i < waveDots.length; i++) {
-        let p = waveDots[i];
-        let band = bands[p.waveIndex];
-        
-        // Calculate baseline Y based on sine wave
-        const waveOffset = Math.sin(p.baseX * band.freq + time * band.speed) * band.amp;
-        const targetY = band.height + p.baseYOffset + waveOffset;
-        const targetX = p.baseX;
-
-        // Mouse displacement
-        let dx = 0;
-        let dy = 0;
-        if (mouse.active) {
-          const distX = mouse.x - p.x;
-          const distY = mouse.y - p.y;
-          const distance = Math.sqrt(distX * distX + distY * distY);
-          
-          if (distance < mouse.radius) {
-            const force = Math.pow((mouse.radius - distance) / mouse.radius, 2);
-            dx = -(distX / distance) * force * 30; // Repel outward
-            dy = -(distY / distance) * force * 30;
-          }
-        }
-
-        // Spring physics towards target
-        p.vx += (targetX + dx - p.x) * 0.05;
-        p.vy += (targetY + dy - p.y) * 0.05;
-        
-        // Damping
-        p.vx *= 0.85;
-        p.vy *= 0.85;
-        
-        p.x += p.vx;
-        p.y += p.vy;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.opacity;
-        ctx.fill();
-      }
-
-      // --- 2. Draw Bubbles ---
+      // --- 1. Draw Background Bubbles ---
       for (let i = 0; i < bubbles.length; i++) {
         let b = bubbles[i];
         b.y -= b.speed;
-        b.speed += 0.005; // slight acceleration
         b.swayOffset += b.swaySpeed;
         
         const currentX = b.x + Math.sin(b.swayOffset) * 20;
-        
-        // Fade out near top
         const fadeRatio = Math.min(1, Math.max(0, b.y / (canvas.height * 0.3)));
         
         if (b.y < -10) {
-          // Reset at bottom
           b.y = canvas.height + Math.random() * 100;
           b.x = Math.random() * canvas.width;
           b.speed = Math.random() * 1.5 + 0.5;
@@ -219,106 +228,64 @@ export const ParticleWaves = () => {
         ctx.beginPath();
         ctx.arc(currentX, b.y, b.size, 0, Math.PI * 2);
         ctx.fillStyle = COLORS.surfaceBlue;
-        ctx.globalAlpha = b.opacity * fadeRatio;
+        ctx.globalAlpha = b.opacity * fadeRatio * 0.5;
         ctx.fill();
       }
 
-      // --- 3. Draw Boids (Fish) ---
-      for (let i = 0; i < boids.length; i++) {
-        let boid = boids[i];
-        
-        let alignX = 0, alignY = 0;
-        let cohesionX = 0, cohesionY = 0;
-        let sepX = 0, sepY = 0;
-        let total = 0;
+      ctx.globalAlpha = 1;
 
-        // Flocking behavior
-        for (let j = 0; j < boids.length; j++) {
-          if (i === j) continue;
-          let other = boids[j];
-          let d = Math.sqrt((boid.x - other.x)**2 + (boid.y - other.y)**2);
+      // Function to render shape particles
+      const renderShape = (particles: ShapeParticle[], isManta: boolean) => {
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
           
-          if (d < perceptionRadius) {
-            alignX += other.vx;
-            alignY += other.vy;
-            cohesionX += other.x;
-            cohesionY += other.y;
+          // Breathing/sway logic
+          const swayX = isManta ? Math.sin(time + p.speedOffset) * 8 : Math.sin(time * 0.5 + p.speedOffset) * 3;
+          const swayY = isManta ? Math.cos(time * 0.8 + p.speedOffset) * 12 : 0;
+          
+          // Manta whole body drift
+          const globalDriftY = isManta ? Math.sin(time * 0.5) * 30 : 0;
+
+          // Target coordinate with sway
+          let tX = p.targetX + swayX;
+          let tY = p.targetY + swayY + globalDriftY;
+
+          // Mouse Repulsion
+          if (mouse.active && assembleProgress > 0.8) {
+            const dx = mouse.x - tX;
+            const dy = mouse.y - tY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
             
-            let diffX = boid.x - other.x;
-            let diffY = boid.y - other.y;
-            diffX /= d;
-            diffY /= d;
-            sepX += diffX;
-            sepY += diffY;
-            
-            total++;
+            if (dist < mouse.radius) {
+              const force = (mouse.radius - dist) / mouse.radius;
+              tX -= (dx / dist) * force * 40;
+              tY -= (dy / dist) * force * 40;
+            }
           }
-        }
 
-        if (total > 0) {
-          alignX /= total; alignY /= total;
-          let steerAlign = { vx: alignX - boid.vx, vy: alignY - boid.vy };
-          limit(steerAlign, maxForce);
-          
-          cohesionX /= total; cohesionY /= total;
-          let targetX = cohesionX - boid.x;
-          let targetY = cohesionY - boid.y;
-          let steerCohesion = { vx: targetX - boid.vx, vy: targetY - boid.vy };
-          limit(steerCohesion, maxForce);
-          
-          sepX /= total; sepY /= total;
-          let steerSep = { vx: sepX - boid.vx, vy: sepY - boid.vy };
-          limit(steerSep, maxForce * 1.5); // separation is stronger
-          
-          boid.vx += steerAlign.vx + steerCohesion.vx + steerSep.vx;
-          boid.vy += steerAlign.vy + steerCohesion.vy + steerSep.vy;
-        }
+          // Interpolate current position based on assembly progress
+          p.x = p.startX + (tX - p.startX) * ease;
+          p.y = p.startY + (tY - p.startY) * ease;
 
-        // Avoid walls
-        const margin = 150;
-        const turnFactor = 0.05;
-        if (boid.x < margin) boid.vx += turnFactor;
-        if (boid.x > canvas.width - margin) boid.vx -= turnFactor;
-        if (boid.y < margin) boid.vy += turnFactor;
-        if (boid.y > canvas.height - margin) boid.vy -= turnFactor;
-
-        // Avoid Mouse
-        if (mouse.active) {
-          const d = Math.sqrt((boid.x - mouse.x)**2 + (boid.y - mouse.y)**2);
-          if (d < 150) {
-            boid.vx += ((boid.x - mouse.x) / d) * 0.2;
-            boid.vy += ((boid.y - mouse.y) / d) * 0.2;
+          // Subtle pulsing size for sunlight particles
+          let currentSize = p.size;
+          if (isManta && p.color === COLORS.sunlight) {
+            currentSize = p.size * (1 + Math.sin(time * 2 + p.speedOffset) * 0.3);
           }
-        }
 
-        limit(boid, maxSpeed);
-        boid.x += boid.vx;
-        boid.y += boid.vy;
-
-        // Draw Teardrop Fish (5 dots)
-        const angle = Math.atan2(boid.vy, boid.vx);
-        const drawFishDot = (offsetX: number, offsetY: number, size: number) => {
-          // Rotate offsets
-          const rx = offsetX * Math.cos(angle) - offsetY * Math.sin(angle);
-          const ry = offsetX * Math.sin(angle) + offsetY * Math.cos(angle);
           ctx.beginPath();
-          ctx.arc(boid.x + rx, boid.y + ry, size, 0, Math.PI * 2);
-          ctx.fillStyle = COLORS.ocean;
-          ctx.globalAlpha = 0.7;
+          ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
           ctx.fill();
-        };
+        }
+      };
 
-        // Head
-        drawFishDot(6, 0, 2);
-        // Body
-        drawFishDot(0, 3, 1.5);
-        drawFishDot(0, -3, 1.5);
-        // Tail
-        drawFishDot(-6, 2, 1);
-        drawFishDot(-6, -2, 1);
-        drawFishDot(-10, 0, 1);
-      }
-      
+      // --- 2. Render Coral ---
+      renderShape(coralParticles, false);
+
+      // --- 3. Render Manta Ray ---
+      renderShape(mantaParticles, true);
+
       animationFrameId = requestAnimationFrame(animate);
     };
 

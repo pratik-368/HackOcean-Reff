@@ -142,7 +142,7 @@ export const ImpactStats = () => {
 
       {/* Wave SVG divider at bottom to transition to TheCrisis (--depth-3) */}
       <div className="absolute bottom-0 left-0 w-full z-[5]">
-        <WaveDivider topColor="transparent" bottomColor="var(--depth-3)" />
+        <WaveDivider />
       </div>
     </section>
   );

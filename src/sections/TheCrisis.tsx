@@ -76,7 +76,7 @@ export const TheCrisis = () => {
     >
       <div className="container mx-auto px-6 relative z-10 w-full flex flex-col items-center py-20">
         
-        {stages.map((stage, index) => {
+        {stages.map((stage) => {
           const StageIcon = stage.icon;
           
           return (
@@ -104,7 +104,7 @@ export const TheCrisis = () => {
       
       {/* Wave SVG divider at bottom to transition to Mission (--depth-4) */}
       <div className="absolute bottom-0 left-0 w-full z-[5]">
-        <WaveDivider topColor="transparent" bottomColor="var(--depth-4)" />
+        <WaveDivider />
       </div>
     </motion.section>
   );

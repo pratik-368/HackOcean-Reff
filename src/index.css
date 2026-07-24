@@ -50,6 +50,10 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  section {
+    background-color: transparent !important;
+  }
+
   h1 {
     font-family: 'Fraunces', serif;
     font-weight: 700;

@@ -53,7 +53,7 @@ export const FinalCTA = () => {
 
       {/* Wave SVG divider at bottom to transition to Footer (--abyss) */}
       <div className="absolute bottom-0 left-0 w-full z-[5]">
-        <WaveDivider topColor="transparent" bottomColor="var(--depth-9)" />
+        <WaveDivider />
       </div>
     </section>
   );

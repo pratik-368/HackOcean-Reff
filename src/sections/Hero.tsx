@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '../components/ui/Button';
 import { ChevronDown } from 'lucide-react';
-import { ParticleWaves } from '../components/canvas/ParticleWaves';
 import { WaveDivider } from '../components/ui/WaveDivider';
 
 export const Hero = () => {
@@ -18,14 +17,12 @@ export const Hero = () => {
   return (
     <section 
       ref={ref}
-      className="relative min-h-screen w-full flex flex-col justify-between overflow-hidden bg-[var(--foam)]"
+      className="relative min-h-screen w-full flex flex-col justify-between overflow-hidden bg-transparent"
     >
-      {/* Ocean Particle Waves System */}
-      <ParticleWaves />
 
       {/* Wave SVG divider at bottom to transition to ImpactStats (--depth-2) */}
       <div className="absolute bottom-0 left-0 w-full z-[5]">
-        <WaveDivider topColor="transparent" bottomColor="var(--depth-2)" />
+        <WaveDivider />
       </div>
 
       {/* ===== CONTENT — LEFT-ALIGNED ===== */}

@@ -11,12 +11,14 @@ import { FAQ } from './sections/FAQ';
 import { FinalCTA } from './sections/FinalCTA';
 import { CausticLight } from './components/ui/CausticLight';
 import { AudioToggle } from './components/ui/AudioToggle';
+import { GlobalParticleSystem } from './components/canvas/GlobalParticleSystem';
 
 
 
 function App() {
   return (
-    <div className="bg-[var(--foam)] min-h-screen text-[var(--ink)]">
+    <div className="relative w-full h-full text-[var(--ink)] overflow-hidden font-body selection:bg-[var(--surface-blue)] selection:text-[var(--deep-blue)]">
+      <GlobalParticleSystem />
       <CausticLight />
       <AudioToggle />
       

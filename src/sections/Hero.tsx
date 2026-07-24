@@ -2,8 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '../components/ui/Button';
 import { ChevronDown } from 'lucide-react';
-import { ParticleShape } from '../components/canvas/ParticleShape';
-import { PlanktonBackground } from '../components/canvas/PlanktonBackground';
+import { ParticleWaves } from '../components/canvas/ParticleWaves';
 
 export const Hero = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -20,8 +19,8 @@ export const Hero = () => {
       ref={ref}
       className="relative min-h-screen w-full flex items-center overflow-hidden bg-[var(--sand)]"
     >
-      {/* Background Plankton Particles */}
-      <PlanktonBackground />
+      {/* Ocean Particle Waves System */}
+      <ParticleWaves />
 
       {/* Subtle looping SVG wave at the bottom */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden z-[5]">
@@ -37,11 +36,6 @@ export const Hero = () => {
             opacity="0.9"
           />
         </svg>
-      </div>
-
-      {/* Interactive Turtle Particle Shape (Right Side) */}
-      <div className="absolute top-0 right-0 w-full md:w-1/2 h-full z-10 pointer-events-auto">
-        <ParticleShape />
       </div>
 
       {/* ===== CONTENT — LEFT-ALIGNED ===== */}

@@ -58,6 +58,9 @@ export const GlobalParticleSystem = () => {
     
     let mouse = { x: -1000, y: -1000, radius: 200, active: false };
     
+    // Global accumulated rotation for conditional shape spinning
+    let currentRotY = 0;
+    
     // Scroll progress tracker
     let scrollProgress = 0;
     let targetScrollProgress = 0;
@@ -135,21 +138,93 @@ export const GlobalParticleSystem = () => {
         return { x: nx * w/2, y: ny * h/2, z: (Math.random() - 0.5) * thickness };
       });
 
-      // 2. Sea Turtle (Crisis/Mission)
-      let turtleTargets = getShapeTargets((oCtx) => {
-        oCtx.scale(shapeSize / 100, shapeSize / 100);
-        oCtx.fillStyle = '#000';
-        oCtx.beginPath(); oCtx.arc(50, 50, 22, 0, Math.PI*2); oCtx.fill();
-        oCtx.beginPath(); oCtx.arc(50, 18, 8, 0, Math.PI*2); oCtx.fill();
-        oCtx.beginPath(); oCtx.moveTo(68, 35); oCtx.lineTo(95, 50); oCtx.lineTo(75, 55); oCtx.fill();
-        oCtx.beginPath(); oCtx.moveTo(32, 35); oCtx.lineTo(5, 50); oCtx.lineTo(25, 55); oCtx.fill();
-        oCtx.beginPath(); oCtx.moveTo(60, 68); oCtx.lineTo(75, 85); oCtx.lineTo(55, 75); oCtx.fill();
-        oCtx.beginPath(); oCtx.moveTo(40, 68); oCtx.lineTo(25, 85); oCtx.lineTo(45, 75); oCtx.fill();
-      }, shapeSize, shapeSize, 3, (nx, ny, w, h) => {
-        const r2 = nx * nx + ny * ny;
-        const thickness = r2 < 0.2 ? Math.sqrt(0.2 - r2) * 150 + 10 : 15;
-        return { x: nx * w/2, y: ny * h/2, z: (Math.random() - 0.5) * thickness };
-      });
+      // 2. Jellyfish (Crisis/Mission)
+      const generateJellyfish = (numPoints: number, radius: number): Vector3[] => {
+        const targets: Vector3[] = [];
+        
+        // Massive head, tight tentacle bundle
+        const headRadius = radius * 1.8; 
+        const tentacleRadius = radius * 0.7; 
+        const armRadius = radius * 0.4; 
+        
+        for (let i = 0; i < numPoints; i++) {
+          const type = Math.random();
+          
+          if (type < 0.50) {
+            // 50%: Bell Dome (Surface of a hemisphere)
+            const theta = Math.random() * Math.PI * 2;
+            const r = Math.sqrt(Math.random()) * headRadius;
+            const y = -Math.sqrt(Math.max(0, headRadius * headRadius - r * r)) * 1.1; 
+            targets.push({ x: Math.cos(theta) * r, y: y, z: Math.sin(theta) * r });
+          } 
+          else if (type < 0.60) {
+            // 10%: Bell Inner Rim (Underneath the bell)
+            const theta = Math.random() * Math.PI * 2;
+            const r = (0.5 + Math.random() * 0.5) * headRadius;
+            const y = (headRadius - r) * 0.4; 
+            targets.push({ x: Math.cos(theta) * r, y: y, z: Math.sin(theta) * r });
+          }
+          else if (type < 0.80) {
+            // 20%: Long thin tentacles from the rim
+            const numTentacles = 16;
+            const tentacleIdx = Math.floor(Math.random() * numTentacles);
+            const baseTheta = (tentacleIdx / numTentacles) * Math.PI * 2;
+            
+            const t = Math.random(); 
+            const length = radius * 4.0; 
+            
+            const wave = Math.sin(t * Math.PI * 5 + tentacleIdx);
+            const r = tentacleRadius + wave * 10 * t; 
+            const theta = baseTheta + wave * 0.2 * t; 
+            
+            const x = Math.cos(theta) * r;
+            const z = Math.sin(theta) * r;
+            const y = t * length; 
+            
+            targets.push({ x, y, z });
+          }
+          else {
+            // 20%: Thick oral arms in the center
+            const numArms = 4;
+            const armIdx = Math.floor(Math.random() * numArms);
+            const baseTheta = (armIdx / numArms) * Math.PI * 2;
+            
+            const t = Math.random();
+            const length = radius * 3.0;
+            
+            const frill = (Math.random() - 0.5) * 20 * (1 - t*0.3); 
+            const wave = Math.sin(t * Math.PI * 4) * 30;
+            
+            const r = armRadius + Math.abs(wave) * t; 
+            const theta = baseTheta + wave * 0.02;
+            
+            const x = Math.cos(theta) * r + frill;
+            const z = Math.sin(theta) * r + frill;
+            const y = t * length;
+            
+            targets.push({ x, y, z });
+          }
+        }
+        
+        // Tilt the jellyfish globally
+        const tilt = Math.PI / 6; // 30 degree tilt
+        const cosT = Math.cos(tilt);
+        const sinT = Math.sin(tilt);
+        
+        // Shuffle the array to distribute the interpolation
+        for (let i = targets.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [targets[i], targets[j]] = [targets[j], targets[i]];
+        }
+        
+        return targets.map(p => {
+          const tiltedX = p.x * cosT - p.y * sinT;
+          const tiltedY = p.x * sinT + p.y * cosT;
+          return { x: tiltedX, y: tiltedY, z: p.z };
+        });
+      };
+      
+      let jellyfishTargets = generateJellyfish(NUM_PARTICLES, shapeSize * 0.25);
 
       // 3. Globe (Real World Map)
       let globeTargets = getShapeTargets((oCtx) => {
@@ -208,14 +283,14 @@ export const GlobalParticleSystem = () => {
       };
 
       mantaTargets = padTargets(mantaTargets);
-      turtleTargets = padTargets(turtleTargets);
+      jellyfishTargets = padTargets(jellyfishTargets);
       globeTargets = padTargets(globeTargets);
       heartTargets = padTargets(heartTargets);
 
       // Centers for each shape
       shapeOffsets = [
         { x: canvas.width * 0.75, y: canvas.height * 0.4, z: 0 }, // Manta
-        { x: canvas.width * 0.5, y: canvas.height * 0.45, z: 0 }, // Turtle
+        { x: canvas.width * 0.5, y: canvas.height * 0.45, z: 0 }, // Jellyfish
         { x: canvas.width * 0.35, y: canvas.height * 0.5, z: 0 }, // Globe
         { x: canvas.width * 0.5, y: canvas.height * 0.45, z: 0 }  // Heart
       ];
@@ -223,7 +298,7 @@ export const GlobalParticleSystem = () => {
       particles = [];
       for (let i = 0; i < NUM_PARTICLES; i++) {
         const t1 = mantaTargets[i];
-        const t2 = turtleTargets[i];
+        const t2 = jellyfishTargets[i];
         const t3 = globeTargets[i];
         const t4 = heartTargets[i];
 
@@ -332,7 +407,11 @@ export const GlobalParticleSystem = () => {
       const mouseXNorm = mouse.active ? (mouse.x / canvas.width - 0.5) * 2 : 0;
       const mouseYNorm = mouse.active ? (mouse.y / canvas.height - 0.5) * 2 : 0;
       
-      const rotYAngle = time * 0.2 + mouseXNorm * Math.PI * 0.3;
+      const shapeRotSpeeds = [1.0, 0.0, 1.0, 1.0]; // Jellyfish (index 1) stops rotating globally
+      const speedMult = shapeRotSpeeds[startIndex] + (shapeRotSpeeds[endIndex] - shapeRotSpeeds[startIndex]) * ease;
+      currentRotY += 0.2 * 0.035 * speedMult;
+      
+      const rotYAngle = currentRotY + mouseXNorm * Math.PI * 0.3;
       const rotXAngle = mouseYNorm * Math.PI * 0.2;
 
       const cosY = Math.cos(rotYAngle);
@@ -350,6 +429,18 @@ export const GlobalParticleSystem = () => {
         let localX = t1.x + (t2.x - t1.x) * ease;
         let localY = t1.y + (t2.y - t1.y) * ease;
         let localZ = t1.z + (t2.z - t1.z) * ease;
+
+        // Dynamic Jellyfish Tentacle Waving
+        let jellyfishAmount = 0;
+        if (startIndex === 1) jellyfishAmount = 1 - ease;
+        if (endIndex === 1) jellyfishAmount = Math.max(jellyfishAmount, ease);
+        
+        if (jellyfishAmount > 0 && localY > 0) {
+           // localY > 0 are the tentacles/arms hanging down below the center
+           const waveAmount = (localY / 150) * jellyfishAmount; 
+           localX += Math.sin(time * 2.5 + localY * 0.02 + p.speedOffset) * 12 * waveAmount;
+           localZ += Math.cos(time * 2.2 + localY * 0.02 + p.speedOffset) * 12 * waveAmount;
+        }
 
         // 2. Add organic breathing to local coords
         localX += Math.sin(time + p.speedOffset) * 6;

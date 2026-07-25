@@ -33,7 +33,7 @@ export const Navbar = () => {
         {/* Logo — Fraunces */}
         <a
           href="#"
-          className="font-heading text-3xl font-bold tracking-tight text-[var(--ocean-deep)]"
+          className="font-heading text-3xl font-bold tracking-tight text-white"
         >
           REEF.
         </a>
@@ -44,7 +44,7 @@ export const Navbar = () => {
             <a
               key={link}
               href={`#${link.toLowerCase().replace(' ', '-')}`}
-              className="text-sm font-semibold transition-colors text-[var(--ocean-deep)] hover:text-[var(--coral)] link-flow pb-1"
+              className="text-sm font-semibold transition-colors text-white hover:text-[var(--sunlight)] link-flow pb-1"
             >
               {link}
             </a>

@@ -17,7 +17,7 @@ import { GlobalParticleSystem } from './components/canvas/GlobalParticleSystem';
 
 function App() {
   return (
-    <div className="relative w-full h-full text-[var(--ink)] overflow-hidden font-body selection:bg-[var(--surface-blue)] selection:text-[var(--deep-blue)]">
+    <div className="relative w-full h-full text-[var(--foam)] overflow-hidden font-body selection:bg-[var(--surface-blue)] selection:text-[var(--deep-blue)]">
       <GlobalParticleSystem />
       <CausticLight />
       <AudioToggle />

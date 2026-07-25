@@ -30,7 +30,7 @@ export const FAQ = () => {
   };
 
   return (
-    <section id="faq" className="py-32 bg-[var(--depth-7)] text-[var(--foam)] relative overflow-hidden">
+    <section id="faq" className="py-32 bg-transparent text-[var(--foam)] relative overflow-hidden">
       
       <div className="container mx-auto px-6 md:px-12 relative z-10 max-w-4xl">
         <motion.div 
@@ -63,7 +63,7 @@ export const FAQ = () => {
                   className="w-full px-8 py-6 flex items-center justify-between text-left focus:outline-none"
                 >
                   <span className="text-xl font-medium pr-8">{faq.question}</span>
-                  <div className={`shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${isOpen ? 'bg-[var(--surface-blue)] border-[var(--surface-blue)] text-[var(--deep-blue)]' : 'border-white/20 text-[var(--foam)]'}`}>
+                  <div className={`shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${isOpen ? 'bg-[var(--surface-blue)] border-[var(--surface-blue)] text-[#020C17]' : 'border-white/20 text-[var(--foam)]'}`}>
                     {isOpen ? <Minus size={16} /> : <Plus size={16} />}
                   </div>
                 </button>

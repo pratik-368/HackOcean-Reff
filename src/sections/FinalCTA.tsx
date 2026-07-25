@@ -4,11 +4,11 @@ import { WaveDivider } from '../components/ui/WaveDivider';
 
 export const FinalCTA = () => {
   return (
-    <section id="final-cta" className="relative pt-32 pb-40 bg-[var(--depth-8)] overflow-hidden">
+    <section id="final-cta" className="relative pt-32 pb-40 bg-transparent overflow-hidden">
       
       {/* Background texture */}
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1582967788606-a171c1080cb0?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-5 mix-blend-overlay pointer-events-none water-mask" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[var(--depth-8)] via-[var(--depth-8)]/80 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-transparent pointer-events-none" />
 
       {/* Coral-branch background */}
       <div className="absolute inset-0 coral-branch-bg opacity-30 pointer-events-none animate-current-drift" />
@@ -32,7 +32,7 @@ export const FinalCTA = () => {
             <input 
               type="email" 
               placeholder="Your email address..." 
-              className="w-full bg-white/50 backdrop-blur-md border border-[var(--foam)]/10 rounded-full px-6 py-4 text-[var(--foam)] text-lg focus:outline-none focus:border-[var(--surface-blue)] transition-colors placeholder:text-[var(--foam)]/40 shadow-sm"
+              className="w-full bg-white/10 backdrop-blur-md border border-[var(--foam)]/20 rounded-full px-6 py-4 text-[var(--foam)] text-lg focus:outline-none focus:border-[var(--surface-blue)] transition-colors placeholder:text-[var(--foam)]/40 shadow-sm"
               required
             />
             <button 

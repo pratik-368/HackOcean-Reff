@@ -39,10 +39,10 @@ export const Mission = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section id="mission" className="py-32 bg-[var(--depth-4)] relative overflow-hidden">
+    <section id="mission" className="py-32 bg-transparent relative overflow-hidden">
       
       {/* Background Ambience */}
-      <div className="absolute top-0 right-0 w-full h-[500px] bg-gradient-to-b from-[var(--depth-4)] to-transparent pointer-events-none" />
+      <div className="absolute top-0 right-0 w-full h-[500px] bg-gradient-to-b from-transparent to-transparent pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-[var(--sunlight)]/10 blur-[120px] rounded-full pointer-events-none animate-current-drift" style={{ animationDelay: '3s' }} />
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
@@ -92,15 +92,15 @@ export const Mission = () => {
               )}
 
               <div className="relative z-10 flex flex-col h-full justify-between w-full p-10 md:p-12">
-                <div className="w-14 h-14 rounded-2xl bg-[var(--deep-blue)]/5 border border-[var(--surface-blue)]/30 flex items-center justify-center mb-10 group-hover:bg-[var(--sunlight)]/10 transition-all duration-500 group-hover:-translate-y-1">
-                  <MissionIcon size={24} className="text-[var(--deep-blue)] group-hover:text-[var(--sunlight)] transition-colors duration-500" strokeWidth={1.5} />
+                <div className="w-14 h-14 rounded-2xl bg-white/5 border border-[var(--surface-blue)]/30 flex items-center justify-center mb-10 group-hover:bg-[var(--sunlight)]/10 transition-all duration-500 group-hover:-translate-y-1">
+                  <MissionIcon size={24} className="text-white group-hover:text-[var(--sunlight)] transition-colors duration-500" strokeWidth={1.5} />
                 </div>
                 
                 <div>
-                  <h3 className="text-3xl font-heading mb-4 text-[var(--deep-blue)]">
+                  <h3 className="text-3xl font-heading mb-4 text-white">
                     {mission.title}
                   </h3>
-                  <p className="text-[var(--ink)]/70 leading-relaxed font-normal text-lg">
+                  <p className="text-[var(--foam)]/80 leading-relaxed font-normal text-lg">
                     {mission.description}
                   </p>
                 </div>

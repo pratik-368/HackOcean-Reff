@@ -13,17 +13,10 @@ const journeySteps = [
 
 export const GetInvolved = () => {
   return (
-    <section id="get-involved" className="py-32 bg-[var(--depth-5)] text-[var(--foam)] relative overflow-hidden">
+    <section id="get-involved" className="py-32 bg-transparent text-[var(--foam)] relative overflow-hidden">
       
       {/* Coral-branch background texture */}
-      <div className="absolute inset-0 coral-branch-bg opacity-30 pointer-events-none filter invert mix-blend-screen" />
-
-      {/* Wave divider at top */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0]">
-        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-[40px]">
-          <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,0 L0,0 Z" fill="var(--deep-blue)" opacity="0.04" />
-        </svg>
-      </div>
+      <div className="absolute inset-0 coral-branch-bg opacity-10 pointer-events-none mix-blend-screen" />
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
@@ -56,19 +49,19 @@ export const GetInvolved = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-            className="md:col-span-7 reef-card text-[var(--deep-blue)] p-10 md:p-16 flex flex-col justify-between relative group overflow-hidden bg-[rgba(127,179,213,0.15)]"
+            className="md:col-span-7 reef-card p-10 md:p-16 flex flex-col justify-between relative group overflow-hidden bg-white/5"
           >
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=1200')] bg-cover bg-center opacity-0 group-hover:opacity-15 transition-all duration-1000 scale-105 group-hover:scale-100 z-0 water-mask" />
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=1200')] bg-cover bg-center opacity-0 group-hover:opacity-20 transition-all duration-1000 scale-105 group-hover:scale-100 z-0 water-mask" />
             
             <div className="relative z-10">
               <div className="flex flex-wrap gap-2 mb-8">
-                <span className="px-3 py-1 rounded-full border border-[var(--surface-blue)]/50 bg-[var(--surface-blue)]/10 text-[var(--deep-blue)] text-sm font-medium tracking-wide">
+                <span className="px-3 py-1 rounded-full border border-white/20 bg-white/10 text-white text-sm font-medium tracking-wide">
                   Beginner-Friendly
                 </span>
-                <span className="px-3 py-1 rounded-full border border-[var(--surface-blue)]/50 bg-[var(--surface-blue)]/10 text-[var(--deep-blue)] text-sm font-medium tracking-wide">
+                <span className="px-3 py-1 rounded-full border border-white/20 bg-white/10 text-white text-sm font-medium tracking-wide">
                   1-Day / 1-Week
                 </span>
-                <span className="px-3 py-1 rounded-full border border-[var(--surface-blue)]/50 bg-[var(--surface-blue)]/10 text-[var(--deep-blue)] text-sm font-medium tracking-wide">
+                <span className="px-3 py-1 rounded-full border border-white/20 bg-white/10 text-white text-sm font-medium tracking-wide">
                   Advanced (Dive Cert Required)
                 </span>
               </div>
@@ -76,8 +69,8 @@ export const GetInvolved = () => {
               <div className="w-20 h-20 rounded-full bg-[var(--surface-blue)]/10 border border-[var(--surface-blue)]/30 flex items-center justify-center mb-10 group-hover:bg-[var(--surface-blue)]/20 transition-colors duration-500">
                 <Waves size={32} className="text-[var(--surface-blue)]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-5xl md:text-7xl font-heading mb-6 tracking-tight text-[var(--deep-blue)]">Volunteer</h3>
-              <p className="text-[var(--ink)]/70 max-w-md text-xl font-normal mb-8 leading-relaxed">
+              <h3 className="text-5xl md:text-7xl font-heading mb-6 tracking-tight text-white">Volunteer</h3>
+              <p className="text-[var(--foam)]/80 max-w-md text-xl font-normal mb-8 leading-relaxed">
                 Join our global network of reef restorers. Get your hands wet and help us plant the next generation of corals.
               </p>
             </div>
@@ -140,26 +133,26 @@ export const GetInvolved = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1], delay: 0.3 }}
-              className="reef-card text-[var(--ink)] p-10 flex-1 flex flex-col justify-between relative group overflow-hidden"
+              className="reef-card p-10 flex-1 flex flex-col justify-between relative group overflow-hidden bg-white/5"
             >
               <div className="relative z-10">
                 <div className="flex gap-2 mb-6">
-                  <span className="px-3 py-1 rounded-full border border-[var(--deep-blue)]/20 bg-[var(--deep-blue)]/5 text-[var(--deep-blue)] text-xs font-medium tracking-wide">
+                  <span className="px-3 py-1 rounded-full border border-white/20 bg-white/10 text-white text-xs font-medium tracking-wide">
                     Corporate
                   </span>
-                  <span className="px-3 py-1 rounded-full border border-[var(--deep-blue)]/20 bg-[var(--deep-blue)]/5 text-[var(--deep-blue)] text-xs font-medium tracking-wide">
+                  <span className="px-3 py-1 rounded-full border border-white/20 bg-white/10 text-white text-xs font-medium tracking-wide">
                     Sustaining
                   </span>
                 </div>
-                <Globe size={32} className="mb-4 text-[var(--deep-blue)]" strokeWidth={1.5} />
-                <h3 className="text-4xl font-heading mb-4 text-[var(--deep-blue)]">Partner</h3>
-                <p className="text-[var(--ink)]/70 font-normal text-lg">
+                <Globe size={32} className="mb-4 text-white" strokeWidth={1.5} />
+                <h3 className="text-4xl font-heading mb-4 text-white">Partner</h3>
+                <p className="text-[var(--foam)]/80 font-normal text-lg">
                   Corporate responsibility meets tangible ocean impact.
                 </p>
               </div>
               
               <Magnetic>
-                <a href="#" className="relative z-10 inline-flex items-center gap-2 mt-8 font-semibold text-[var(--deep-blue)] group-hover:gap-4 transition-all w-max link-flow pb-1">
+                <a href="#" className="relative z-10 inline-flex items-center gap-2 mt-8 font-semibold text-white group-hover:gap-4 transition-all w-max link-flow pb-1">
                   Let's Talk <ArrowRight size={20} />
                 </a>
               </Magnetic>

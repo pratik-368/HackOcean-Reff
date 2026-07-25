@@ -67,10 +67,10 @@ const createCustomIcon = (health: string) => {
 
 export const GlobalMap = () => {
   return (
-    <section id="global-map" className="py-32 bg-[var(--depth-6)] relative overflow-hidden">
+    <section id="global-map" className="py-32 bg-transparent relative overflow-hidden">
       
       {/* Background Ambience */}
-      <div className="absolute top-0 right-0 w-full h-[500px] bg-gradient-to-b from-[var(--depth-6)] to-transparent pointer-events-none" />
+      <div className="absolute top-0 right-0 w-full h-[500px] bg-gradient-to-b from-transparent to-transparent pointer-events-none" />
 
       <div className="container mx-auto px-6 md:px-12 mb-12 relative z-20">
         <motion.div 
@@ -107,12 +107,12 @@ export const GlobalMap = () => {
             zoom={3} 
             minZoom={2}
             scrollWheelZoom={false} 
-            className="w-full h-full bg-[#e3e9eb]"
+            className="w-full h-full bg-transparent"
           >
-            {/* Light minimal map tiles */}
+            {/* Dark minimal map tiles */}
             <TileLayer
               attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-              url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+              url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
               opacity={0.8}
             />
             
@@ -123,7 +123,7 @@ export const GlobalMap = () => {
                 icon={createCustomIcon(project.health)}
               >
                 <Popup className="custom-popup" closeButton={false}>
-                  <div className="w-[320px] rounded-[24px] overflow-hidden bg-white/90 backdrop-blur-xl border border-[var(--deep-blue)]/10 shadow-xl p-1">
+                  <div className="w-[320px] rounded-[24px] overflow-hidden bg-[#020C17]/90 backdrop-blur-xl border border-[var(--surface-blue)]/20 shadow-xl p-1">
                     <div className="h-40 w-full relative rounded-[1.3rem] overflow-hidden">
                       <img src={project.image} alt={project.name} className="w-full h-full object-cover water-mask" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -133,14 +133,14 @@ export const GlobalMap = () => {
                       </div>
                     </div>
                     <div className="p-5">
-                      <h4 className="text-xl font-heading text-[var(--deep-blue)] mb-4 leading-tight">{project.name}</h4>
+                      <h4 className="text-xl font-heading text-white mb-4 leading-tight">{project.name}</h4>
                       
                       <div className="mb-6">
-                        <div className="flex justify-between text-xs text-[var(--ink)]/60 mb-2 font-medium tracking-wide uppercase">
+                        <div className="flex justify-between text-xs text-[var(--foam)]/80 mb-2 font-medium tracking-wide uppercase">
                           <span>Restoration Progress</span>
                           <span className="text-[var(--surface-blue)] font-bold">{project.progress}%</span>
                         </div>
-                        <div className="w-full h-1.5 bg-[var(--ink)]/5 rounded-full overflow-hidden">
+                        <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                           <div 
                             className="h-full bg-[var(--surface-blue)] rounded-full relative"
                             style={{ width: `${project.progress}%` }}
@@ -150,7 +150,7 @@ export const GlobalMap = () => {
                       </div>
                       
                       <Magnetic>
-                        <button className="w-full py-3 rounded-xl bg-[var(--deep-blue)]/5 hover:bg-[var(--surface-blue)]/10 transition-colors border border-[var(--deep-blue)]/5 text-center text-sm text-[var(--deep-blue)] font-semibold flex items-center justify-center gap-2 group link-flow pb-3">
+                        <button className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/10 text-center text-sm text-[var(--foam)] font-semibold flex items-center justify-center gap-2 group link-flow pb-3">
                           View Deep Dive <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                         </button>
                       </Magnetic>

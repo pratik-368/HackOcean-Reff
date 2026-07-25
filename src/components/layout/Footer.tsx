@@ -2,7 +2,7 @@ import { FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
 
 export const Footer = () => {
   return (
-    <footer className="relative bg-[var(--abyss)] pt-32 pb-12 overflow-hidden">
+    <footer className="relative bg-transparent pt-32 pb-12 overflow-hidden">
       
       {/* Seabed gradient texture at bottom */}
       <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[var(--ocean)]/20 to-transparent pointer-events-none" />

@@ -39,7 +39,7 @@ export const AudioToggle = () => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 2, duration: 1 }}
       onClick={toggleAudio}
-      className="fixed bottom-6 left-6 z-[90] w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-[var(--surface-blue)]/30 flex items-center justify-center text-[var(--deep-blue)] shadow-lg hover:bg-[var(--surface-blue)] hover:text-white hover:border-transparent transition-all duration-300 group"
+      className="fixed bottom-6 left-6 z-[90] w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-[var(--surface-blue)]/30 flex items-center justify-center text-white shadow-lg hover:bg-[var(--surface-blue)] hover:text-white hover:border-transparent transition-all duration-300 group"
       aria-label="Toggle ambient ocean sound"
     >
       {isPlaying ? (
@@ -49,7 +49,7 @@ export const AudioToggle = () => {
       )}
       
       {/* Tooltip */}
-      <span className="absolute left-16 px-3 py-1.5 rounded-lg bg-[var(--deep-blue)] text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+      <span className="absolute left-16 px-3 py-1.5 rounded-lg bg-[#020C17]/80 backdrop-blur-md border border-[var(--surface-blue)]/20 text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
         {isPlaying ? 'Mute ambient sound' : 'Play ambient sound'}
       </span>
     </motion.button>

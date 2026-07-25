@@ -27,14 +27,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         'hover:shadow-[0_0_24px_rgba(255,184,107,0.5)] ' +
         'hover:brightness-110 font-bold',
       secondary:
-        'border-2 border-[var(--deep-blue)] text-[var(--deep-blue)] bg-transparent ' +
-        'hover:bg-[var(--surface-blue)]/10',
+        'border border-[var(--surface-blue)]/40 text-[var(--foam)] bg-transparent ' +
+        'hover:bg-[var(--surface-blue)]/20 hover:border-[var(--surface-blue)]',
       outline:
-        'border-2 border-[var(--deep-blue)] text-[var(--deep-blue)] bg-transparent ' +
-        'hover:bg-[var(--surface-blue)]/10',
+        'border border-[var(--surface-blue)]/40 text-[var(--foam)] bg-transparent ' +
+        'hover:bg-[var(--surface-blue)]/20 hover:border-[var(--surface-blue)]',
       ghost:
-        'text-[var(--deep-blue)] bg-transparent ' +
-        'hover:bg-[var(--deep-blue)]/5',
+        'text-[var(--foam)] bg-transparent ' +
+        'hover:bg-[var(--surface-blue)]/10',
     };
 
     const sizes = {

@@ -41,10 +41,10 @@ export const ImpactStats = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="impact" className="py-24 relative bg-[var(--depth-2)] z-10">
+    <section id="impact" className="py-24 relative bg-transparent z-10">
       
       {/* Wave Ambience */}
-      <div className="absolute top-0 right-0 w-full h-[500px] bg-gradient-to-b from-[var(--depth-2)] to-transparent pointer-events-none" />
+      <div className="absolute top-0 right-0 w-full h-[500px] bg-gradient-to-b from-transparent to-transparent pointer-events-none" />
 
       <div ref={ref} className="container mx-auto px-6 md:px-12 relative z-10">
         {/* Section header */}
@@ -55,7 +55,7 @@ export const ImpactStats = () => {
           className="text-center mb-16"
         >
           <h2 className="mb-4">Our Impact in Numbers</h2>
-          <p className="text-[var(--ink)]/60 max-w-lg mx-auto">
+          <p className="text-[var(--foam)]/80 max-w-lg mx-auto">
             Every number represents real reef restored, real lives changed, and real ocean protected.
           </p>
         </motion.div>
@@ -88,16 +88,16 @@ export const ImpactStats = () => {
               </div>
 
               {/* Icon */}
-              <div className="relative z-10 mb-6 w-14 h-14 flex items-center justify-center rounded-2xl bg-[var(--deep-blue)]/5 group-hover:bg-[var(--sunlight)]/10 transition-colors duration-400">
+              <div className="relative z-10 mb-6 w-14 h-14 flex items-center justify-center rounded-2xl bg-[var(--surface-blue)]/10 group-hover:bg-[var(--sunlight)]/20 transition-colors duration-400">
                 <IconComponent
                   size={26}
                   strokeWidth={1.5}
-                  className="text-[var(--deep-blue)] group-hover:text-[var(--sunlight)] transition-colors duration-400"
+                  className="text-[var(--foam)] group-hover:text-[var(--sunlight)] transition-colors duration-400"
                 />
               </div>
 
               {/* Number */}
-                <div className="text-4xl md:text-5xl font-bold text-[var(--deep-blue)] mb-2 group-hover:scale-110 transition-transform duration-500 origin-left">
+                <div className="text-4xl md:text-5xl font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-500 origin-left">
                 {isInView ? (
                   // @ts-ignore - Handle Vite CJS/ESM interop differences where CountUp might be an object
                   (CountUp.default || CountUp) && (
@@ -131,7 +131,7 @@ export const ImpactStats = () => {
               </div>
 
               {/* Label */}
-              <p className="text-[var(--ink)]/50 uppercase tracking-[0.15em] text-xs font-semibold group-hover:text-[var(--ink)]/80 transition-colors duration-300">
+              <p className="text-[var(--foam)]/60 uppercase tracking-[0.15em] text-xs font-semibold group-hover:text-white transition-colors duration-300">
                 {stat.title}
               </p>
             </motion.div>

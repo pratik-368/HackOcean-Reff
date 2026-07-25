@@ -37,7 +37,7 @@ export const Stories = () => {
   }, []);
 
   return (
-    <section id="stories" className="py-32 bg-[var(--depth-7)] text-[var(--foam)] overflow-hidden cursor-grab active:cursor-grabbing border-none relative">
+    <section id="stories" className="py-32 bg-transparent text-[var(--foam)] overflow-hidden cursor-grab active:cursor-grabbing border-none relative">
       <div className="container mx-auto px-6 md:px-12 mb-20 relative z-10">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -60,14 +60,14 @@ export const Stories = () => {
           {stories.map((story) => (
             <motion.div 
               key={story.id}
-              className="min-w-[85vw] md:min-w-[650px] h-[550px] rounded-[28px] overflow-hidden relative group shadow-[0_8px_30px_rgba(127,179,213,0.15)] border border-[var(--surface-blue)]/20 water-mask"
+              className="min-w-[85vw] md:min-w-[650px] h-[550px] rounded-[28px] overflow-hidden relative group shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-white/10 water-mask"
             >
               <motion.img 
                 src={story.image} 
                 alt={story.author} 
                 className="absolute inset-0 w-[110%] h-full object-cover transition-transform duration-1000 group-hover:scale-105 pointer-events-none origin-left"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[var(--deep-blue)] via-[var(--deep-blue)]/40 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#01080F] via-[#01080F]/60 to-transparent pointer-events-none" />
               
               <div className="absolute bottom-0 left-0 right-0 p-10 md:p-14 pointer-events-none">
                 <div className="relative">

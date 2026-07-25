@@ -337,22 +337,22 @@ export const GlobalParticleSystem = () => {
     };
 
     const animate = () => {
-      time += 0.035; 
-      scrollProgress += (targetScrollProgress - scrollProgress) * 0.12;
+      time += 0.06; 
+      scrollProgress += (targetScrollProgress - scrollProgress) * 0.25;
       
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
       if (scrollProgress < 0.2) {
-        gradient.addColorStop(0, COLORS.foam);
-        gradient.addColorStop(1, '#BFE0F2');
+        gradient.addColorStop(0, '#06233B');
+        gradient.addColorStop(1, '#041C32');
       } else if (scrollProgress < 0.4) {
-        gradient.addColorStop(0, '#BFE0F2');
-        gradient.addColorStop(1, COLORS.surfaceBlue);
+        gradient.addColorStop(0, '#041C32');
+        gradient.addColorStop(1, '#031424');
       } else if (scrollProgress < 0.7) {
-        gradient.addColorStop(0, COLORS.surfaceBlue);
-        gradient.addColorStop(1, '#334155');
+        gradient.addColorStop(0, '#031424');
+        gradient.addColorStop(1, '#020C17');
       } else {
-        gradient.addColorStop(0, '#334155');
-        gradient.addColorStop(1, COLORS.abyss);
+        gradient.addColorStop(0, '#020C17');
+        gradient.addColorStop(1, '#01080F');
       }
       
       ctx.fillStyle = gradient;
@@ -409,7 +409,7 @@ export const GlobalParticleSystem = () => {
       
       const shapeRotSpeeds = [1.0, 0.0, 1.0, 1.0]; // Jellyfish (index 1) stops rotating globally
       const speedMult = shapeRotSpeeds[startIndex] + (shapeRotSpeeds[endIndex] - shapeRotSpeeds[startIndex]) * ease;
-      currentRotY += 0.2 * 0.035 * speedMult;
+      currentRotY += 0.2 * 0.06 * speedMult;
       
       const rotYAngle = currentRotY + mouseXNorm * Math.PI * 0.3;
       const rotXAngle = mouseYNorm * Math.PI * 0.2;
@@ -476,11 +476,10 @@ export const GlobalParticleSystem = () => {
         }
 
         // 6. Spring Physics to move current to target
-        // Reduced spring factor makes the particles lag behind slightly, 
-        // enhancing the feeling of a floating swarm during transitions.
-        p.x += (finalTargetX - p.x) * 0.08;
-        p.y += (finalTargetY - p.y) * 0.08;
-        p.z += (finalTargetZ - p.z) * 0.08;
+        // Faster spring factor makes the particles snap into the new shape much quicker.
+        p.x += (finalTargetX - p.x) * 0.20;
+        p.y += (finalTargetY - p.y) * 0.20;
+        p.z += (finalTargetZ - p.z) * 0.20;
 
         // 7. Mouse Repulsion in 2D Screen Space (Approximate)
         // We project the point to see if mouse is near it

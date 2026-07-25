@@ -38,7 +38,7 @@ export const Hero = () => {
             transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
             className="mb-6 flex flex-col items-start gap-4"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--deep-blue)]/5 border border-[var(--deep-blue)]/10 text-xs font-semibold tracking-widest text-[var(--deep-blue)] uppercase">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--surface-blue)]/10 border border-[var(--surface-blue)]/20 text-xs font-semibold tracking-widest text-[var(--surface-blue)] uppercase">
               In partnership with Global Ocean Trust
             </div>
             <div className="text-[var(--surface-blue)] font-bold text-sm tracking-wide">
@@ -53,7 +53,7 @@ export const Hero = () => {
           >
             <h1 className="mb-6">
               Protect What <br />
-              <span className="text-glow-surface text-[var(--ocean)]">Sustains</span> Us.
+              <span className="text-glow-surface text-[var(--surface-blue)]">Sustains</span> Us.
             </h1>
           </motion.div>
 
@@ -61,7 +61,7 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1], delay: 0.3 }}
-            className="text-lg md:text-xl text-[var(--ink)]/80 max-w-xl mb-10 font-normal leading-relaxed"
+            className="text-lg md:text-xl text-[var(--foam)]/80 max-w-xl mb-10 font-normal leading-relaxed"
           >
             Coral reefs support over 25% of all marine life despite covering less than 1% of the ocean floor. We are running out of time.
           </motion.p>
@@ -89,7 +89,7 @@ export const Hero = () => {
         transition={{ delay: 1.2, duration: 1 }}
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20"
       >
-        <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--deep-blue)]/40 font-medium">Scroll to explore</span>
+        <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--foam)]/60 font-medium">Scroll to explore</span>
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}

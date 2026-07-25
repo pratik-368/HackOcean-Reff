@@ -32,20 +32,21 @@ export const FAQ = () => {
   return (
     <section id="faq" className="py-32 bg-transparent text-[var(--foam)] relative overflow-hidden">
       
-      <div className="container mx-auto px-6 md:px-12 relative z-10 max-w-4xl">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-6xl font-heading mb-6 tracking-tight text-[var(--foam)]">Common Questions</h2>
-          <p className="text-xl text-[var(--foam)]/80 font-normal leading-relaxed">
-            Everything you need to know about our restoration methods, volunteer requirements, and financial transparency.
-          </p>
-        </motion.div>
+      <div className="container mx-auto px-6 md:px-12 relative z-10">
+        <div className="max-w-3xl">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="text-left mb-16"
+          >
+            <h2 className="text-4xl md:text-6xl font-heading mb-6 tracking-tight text-[var(--foam)]">Common Questions</h2>
+            <p className="text-xl text-[var(--foam)]/80 font-normal leading-relaxed">
+              Everything you need to know about our restoration methods, volunteer requirements, and financial transparency.
+            </p>
+          </motion.div>
 
-        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             
@@ -85,6 +86,7 @@ export const FAQ = () => {
               </motion.div>
             );
           })}
+          </div>
         </div>
       </div>
       

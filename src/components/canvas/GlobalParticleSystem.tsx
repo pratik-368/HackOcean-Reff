@@ -10,7 +10,7 @@ const COLORS = {
   abyss: '#041C32'
 };
 
-const NUM_PARTICLES = 5000;
+const NUM_PARTICLES = 12000;
 const SHAPE_COUNT = 4;
 
 interface Vector3 {
@@ -133,7 +133,7 @@ export const GlobalParticleSystem = () => {
         `);
         oCtx.fillStyle = '#000';
         oCtx.fill(path);
-      }, shapeSize, shapeSize, 3, (nx, ny, w, h) => {
+      }, shapeSize, shapeSize, 2, (nx, ny, w, h) => {
         const thickness = Math.exp(-(nx * nx * 5 + ny * ny * 2)) * 60 + 5;
         return { x: nx * w/2, y: ny * h/2, z: (Math.random() - 0.5) * thickness };
       });
@@ -237,14 +237,14 @@ export const GlobalParticleSystem = () => {
         const path = new Path2D(WORLD_PATH);
         oCtx.fillStyle = '#000';
         oCtx.fill(path);
-      }, shapeSize, shapeSize, 3, (nx, ny, w) => {
+      }, shapeSize, shapeSize, 2, (nx, ny, w) => {
         // Equirectangular mapping to 3D Sphere
         // nx is Longitude (-PI to PI), ny is Latitude (-PI/2 to PI/2)
         const lon = nx * Math.PI;
         // The SVG world map has Antarctica at the bottom. ny goes from -1 to 1.
         const lat = ny * (Math.PI / 2);
         
-        const R = w * 0.42; // Sphere radius
+        const R = w * 0.50; // Slightly reduced Sphere radius
         
         // Spherical to Cartesian
         const x = R * Math.cos(lat) * Math.sin(lon);
@@ -269,7 +269,7 @@ export const GlobalParticleSystem = () => {
         `);
         oCtx.fillStyle = '#000';
         oCtx.fill(path);
-      }, shapeSize, shapeSize, 3, (nx, ny, w, h) => {
+      }, shapeSize, shapeSize, 2, (nx, ny, w, h) => {
         const thickness = Math.max(0, 1 - Math.sqrt(nx * nx + ny * ny)) * 70;
         return { x: nx * w/2, y: ny * h/2, z: (Math.random() - 0.5) * thickness };
       });
@@ -288,11 +288,13 @@ export const GlobalParticleSystem = () => {
       heartTargets = padTargets(heartTargets);
 
       // Centers for each shape
+      const centerX = canvas.width > 768 ? canvas.width * 0.75 : canvas.width * 0.5;
+      
       shapeOffsets = [
-        { x: canvas.width * 0.75, y: canvas.height * 0.4, z: 0 }, // Manta
-        { x: canvas.width * 0.5, y: canvas.height * 0.45, z: 0 }, // Jellyfish
-        { x: canvas.width * 0.35, y: canvas.height * 0.5, z: 0 }, // Globe
-        { x: canvas.width * 0.5, y: canvas.height * 0.45, z: 0 }  // Heart
+        { x: centerX, y: canvas.height * 0.45, z: 0 }, // Manta
+        { x: centerX, y: canvas.height * 0.45, z: 0 }, // Jellyfish
+        { x: canvas.width * 0.5, y: canvas.height * 0.5, z: 0 }, // Globe centered
+        { x: centerX, y: canvas.height * 0.45, z: 0 }  // Heart
       ];
 
       particles = [];
@@ -316,7 +318,7 @@ export const GlobalParticleSystem = () => {
             z: (Math.random() - 0.5) * 800
           },
           color: isSunlight ? COLORS.sunlight : COLORS.surfaceBlue,
-          size: Math.random() * 1.5 + 1.0, // Slightly larger base size for 3D
+          size: Math.random() * 0.7 + 0.5, // Slightly larger particles
           speedOffset: Math.random() * Math.PI * 2
         });
       }
@@ -327,7 +329,7 @@ export const GlobalParticleSystem = () => {
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           z: (Math.random() - 0.5) * 600, // Background bubbles have deep Z
-          size: Math.random() * 2.5 + 1,
+          size: Math.random() * 1.0 + 0.4, // Scaled down bubbles to match the tiny aesthetic
           speed: Math.random() * 2.5 + 1.0,
           swayOffset: Math.random() * Math.PI * 2,
           swaySpeed: Math.random() * 0.03 + 0.015,
@@ -494,10 +496,10 @@ export const GlobalParticleSystem = () => {
           
           if (dist < mouse.radius) {
             const force = Math.pow((mouse.radius - dist) / mouse.radius, 2);
-            // Push the particle backwards in Z as well as X/Y for a 3D scatter effect!
-            p.x -= (dx / dist) * force * 40;
-            p.y -= (dy / dist) * force * 40;
-            p.z += force * 100; // Pushes them deep into the screen
+            // Push the particle backwards in Z as well as X/Y for a 3D scatter effect! (Reduced by half)
+            p.x -= (dx / dist) * force * 20;
+            p.y -= (dy / dist) * force * 20;
+            p.z += force * 50; // Pushes them deep into the screen
           }
         }
 

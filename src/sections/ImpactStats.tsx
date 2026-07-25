@@ -52,32 +52,33 @@ export const ImpactStats = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-          className="text-center mb-16"
+          className="text-left mb-16"
         >
           <h2 className="mb-4">Our Impact in Numbers</h2>
-          <p className="text-[var(--foam)]/80 max-w-lg mx-auto">
+          <p className="text-[var(--foam)]/80 max-w-lg">
             Every number represents real reef restored, real lives changed, and real ocean protected.
           </p>
         </motion.div>
 
         {/* Stats Grid — reef-cards with organic blob behind each icon */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map((stat, i) => {
-            const IconComponent = stat.icon;
-            return (
-            <motion.div
-              key={stat.id}
-              initial={{ opacity: 0, y: 40 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.7,
-                delay: i * 0.1,
-                ease: [0.19, 1, 0.22, 1],
-              }}
-              className="reef-card p-8 flex flex-col items-center text-center relative overflow-hidden group"
-            >
-              {/* Organic blob shape behind the icon */}
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-24 opacity-[0.08] pointer-events-none">
+        <div className="max-w-5xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((stat, i) => {
+              const IconComponent = stat.icon;
+              return (
+              <motion.div
+                key={stat.id}
+                initial={{ opacity: 0, y: 40 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  duration: 0.7,
+                  delay: i * 0.1,
+                  ease: [0.19, 1, 0.22, 1],
+                }}
+                className="reef-card p-8 flex flex-col items-start text-left relative overflow-hidden group"
+              >
+                {/* Organic blob shape behind the icon */}
+                <div className="absolute top-4 left-6 w-24 h-24 opacity-[0.08] pointer-events-none">
                 <div
                   className="w-full h-full blob-shape"
                   style={{
@@ -134,9 +135,10 @@ export const ImpactStats = () => {
               <p className="text-[var(--foam)]/60 uppercase tracking-[0.15em] text-xs font-semibold group-hover:text-white transition-colors duration-300">
                 {stat.title}
               </p>
-            </motion.div>
-            );
-          })}
+              </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
 

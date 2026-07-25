@@ -41,7 +41,8 @@ export const GetInvolved = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-auto mb-32">
+        <div className="max-w-5xl">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-auto mb-32">
           
           {/* Volunteer Card */}
           <motion.div 
@@ -159,6 +160,7 @@ export const GetInvolved = () => {
             </motion.div>
           </div>
         </div>
+        </div>
 
         {/* Numbered Journey Timeline */}
         <motion.div 
@@ -166,11 +168,11 @@ export const GetInvolved = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
-          className="max-w-6xl mx-auto"
+          className="max-w-4xl"
         >
-          <div className="text-center mb-16">
+          <div className="text-left mb-16">
             <h3 className="text-4xl md:text-5xl font-heading mb-4">How You Can Help</h3>
-            <p className="text-xl text-[var(--foam)]/70 max-w-2xl mx-auto">From signing up to seeing your personal impact on the ocean floor.</p>
+            <p className="text-xl text-[var(--foam)]/70 max-w-2xl">From signing up to seeing your personal impact on the ocean floor.</p>
           </div>
 
           <div className="relative">
@@ -182,7 +184,7 @@ export const GetInvolved = () => {
                 const Icon = step.icon;
                 return (
                   <div key={i} className="relative flex flex-row md:flex-col items-start gap-6 md:gap-4 z-10">
-                    <div className="shrink-0 w-20 h-20 md:mx-auto rounded-full bg-[var(--deep-blue)] border border-[var(--foam)]/20 flex items-center justify-center shadow-lg relative">
+                    <div className="shrink-0 w-20 h-20 rounded-full bg-[var(--deep-blue)] border border-[var(--foam)]/20 flex items-center justify-center shadow-lg relative">
                       {/* Step number badge */}
                       <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[var(--sunlight)] text-[var(--abyss)] flex items-center justify-center text-sm font-bold shadow-md">
                         {i + 1}
@@ -190,7 +192,7 @@ export const GetInvolved = () => {
                       <Icon size={32} className="text-[var(--foam)]" strokeWidth={1.5} />
                     </div>
                     
-                    <div className="md:text-center mt-2 md:mt-4">
+                    <div className="md:text-left mt-2 md:mt-4">
                       <h4 className="text-xl font-heading text-[var(--foam)] mb-2">{step.title}</h4>
                       <p className="text-[var(--foam)]/70 text-sm leading-relaxed">{step.desc}</p>
                     </div>

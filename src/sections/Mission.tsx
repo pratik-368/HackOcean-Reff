@@ -68,10 +68,11 @@ export const Mission = () => {
           </motion.p>
         </div>
 
-        <div 
-          ref={containerRef}
-          className="grid grid-cols-1 md:grid-cols-12 gap-6 relative"
-        >
+        <div className="max-w-4xl">
+          <div 
+            ref={containerRef}
+            className="grid grid-cols-1 md:grid-cols-12 gap-6 relative"
+          >
           {missions.map((mission, index) => {
             const MissionIcon = mission.icon;
             return (
@@ -108,6 +109,7 @@ export const Mission = () => {
             </motion.div>
             );
           })}
+          </div>
         </div>
       </div>
 

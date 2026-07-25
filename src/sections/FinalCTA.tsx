@@ -13,22 +13,22 @@ export const FinalCTA = () => {
       {/* Coral-branch background */}
       <div className="absolute inset-0 coral-branch-bg opacity-30 pointer-events-none animate-current-drift" />
 
-      <div className="container mx-auto px-6 relative z-10 text-center">
+      <div className="container mx-auto px-6 relative z-10 text-left">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-          className="max-w-4xl mx-auto"
+          className="max-w-3xl"
         >
           <h2 className="text-6xl md:text-8xl lg:text-9xl font-heading mb-8 text-[var(--foam)] tracking-tight font-bold">
             Dive In.
           </h2>
-          <p className="text-xl md:text-3xl text-[var(--foam)]/80 font-normal mb-12 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-3xl text-[var(--foam)]/80 font-normal mb-12 max-w-2xl leading-relaxed">
             Join the community of thousands who have pledged to protect our oceans. The reef remembers.
           </p>
           
-          <form className="max-w-md mx-auto relative group mb-8">
+          <form className="max-w-md relative group mb-8">
             <input 
               type="email" 
               placeholder="Your email address..." 
@@ -43,7 +43,7 @@ export const FinalCTA = () => {
             </button>
           </form>
           
-          <div className="flex justify-center mt-12">
+          <div className="flex justify-start mt-12">
             <Button size="lg" variant="primary" showArrow>
               Make a Donation
             </Button>

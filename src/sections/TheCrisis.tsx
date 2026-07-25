@@ -62,7 +62,7 @@ export const TheCrisis = () => {
       style={{ backgroundColor }}
       className="relative w-full overflow-hidden"
     >
-      <div className="container mx-auto px-6 relative z-10 w-full flex flex-col items-center py-20">
+      <div className="container mx-auto px-6 relative z-10 w-full flex flex-col items-start py-20">
         
         {stages.map((stage) => {
           const StageIcon = stage.icon;
@@ -74,7 +74,7 @@ export const TheCrisis = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="relative flex flex-col justify-center items-center text-center w-full max-w-4xl min-h-[85vh]"
+              className="relative flex flex-col justify-center items-start text-left w-full max-w-2xl min-h-[85vh]"
             >
               <div className="mb-8 p-6 rounded-full inline-flex bg-white/10 backdrop-blur-md shadow-xl border border-white/20">
                 <StageIcon size={40} style={{ color: stage.textColor }} strokeWidth={1.5} />

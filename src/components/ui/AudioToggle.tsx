@@ -7,8 +7,8 @@ export const AudioToggle = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    // Create audio element only on client
-    const audio = new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=ocean-waves-112906.mp3');
+    // Ambient relaxing music: "Fluidscape" by Kevin MacLeod (incompetech.com)
+    const audio = new Audio('https://incompetech.com/music/royalty-free/mp3-royaltyfree/Fluidscape.mp3');
     audio.loop = true;
     audio.volume = 0.3; // Very quiet
     audioRef.current = audio;

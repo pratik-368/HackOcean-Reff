@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import { WORLD_PATH } from './worldPath';
 
 // Configuration
 const COLORS = {
@@ -23,6 +24,7 @@ interface GlobalParticle {
   y: number;
   z: number;
   targets: Vector3[];
+  backgroundTarget: Vector3; // The random spot to disperse to during transitions
   size: number;
   speedOffset: number;
   color: string;
@@ -74,7 +76,7 @@ export const GlobalParticleSystem = () => {
       width: number, 
       height: number, 
       sampleRate: number,
-      zMapFn: (nx: number, ny: number, width: number) => number
+      transform3DFn: (nx: number, ny: number, width: number, height: number) => Vector3
     ) => {
       const offscreen = document.createElement('canvas');
       offscreen.width = width;
@@ -95,11 +97,7 @@ export const GlobalParticleSystem = () => {
             const nx = (x - width / 2) / (width / 2);
             const ny = (y - height / 2) / (height / 2);
             
-            targets.push({ 
-              x: x - width / 2, 
-              y: y - height / 2,
-              z: zMapFn(nx, ny, width)
-            });
+            targets.push(transform3DFn(nx, ny, width, height));
           }
         }
       }
@@ -132,10 +130,9 @@ export const GlobalParticleSystem = () => {
         `);
         oCtx.fillStyle = '#000';
         oCtx.fill(path);
-      }, shapeSize, shapeSize, 3, (nx, ny) => {
-        // Manta: Thickest in the center (spine), tapering at the wings
+      }, shapeSize, shapeSize, 3, (nx, ny, w, h) => {
         const thickness = Math.exp(-(nx * nx * 5 + ny * ny * 2)) * 60 + 5;
-        return (Math.random() - 0.5) * thickness;
+        return { x: nx * w/2, y: ny * h/2, z: (Math.random() - 0.5) * thickness };
       });
 
       // 2. Sea Turtle (Crisis/Mission)
@@ -148,34 +145,44 @@ export const GlobalParticleSystem = () => {
         oCtx.beginPath(); oCtx.moveTo(32, 35); oCtx.lineTo(5, 50); oCtx.lineTo(25, 55); oCtx.fill();
         oCtx.beginPath(); oCtx.moveTo(60, 68); oCtx.lineTo(75, 85); oCtx.lineTo(55, 75); oCtx.fill();
         oCtx.beginPath(); oCtx.moveTo(40, 68); oCtx.lineTo(25, 85); oCtx.lineTo(45, 75); oCtx.fill();
-      }, shapeSize, shapeSize, 3, (nx, ny) => {
-        // Turtle: Domed shell in the center, flat flippers
+      }, shapeSize, shapeSize, 3, (nx, ny, w, h) => {
         const r2 = nx * nx + ny * ny;
         const thickness = r2 < 0.2 ? Math.sqrt(0.2 - r2) * 150 + 10 : 15;
-        return (Math.random() - 0.5) * thickness;
+        return { x: nx * w/2, y: ny * h/2, z: (Math.random() - 0.5) * thickness };
       });
 
-      // 3. Globe (Global Map)
+      // 3. Globe (Real World Map)
       let globeTargets = getShapeTargets((oCtx) => {
-        oCtx.scale(shapeSize / 100, shapeSize / 100);
-        oCtx.strokeStyle = '#000';
-        oCtx.lineWidth = 4;
-        oCtx.lineCap = 'round';
-        oCtx.beginPath(); oCtx.arc(50, 50, 35, 0, Math.PI*2); oCtx.stroke();
-        oCtx.lineWidth = 2;
-        oCtx.beginPath(); oCtx.ellipse(50, 50, 15, 35, 0, 0, Math.PI*2); oCtx.stroke();
-        oCtx.beginPath(); oCtx.moveTo(15, 50); oCtx.lineTo(85, 50); oCtx.stroke();
-        oCtx.beginPath(); oCtx.moveTo(25, 25); oCtx.lineTo(75, 25); oCtx.stroke();
-        oCtx.beginPath(); oCtx.moveTo(25, 75); oCtx.lineTo(75, 75); oCtx.stroke();
-      }, shapeSize, shapeSize, 2, (nx, ny, width) => {
-        // Globe: Map exact 2D coordinates to a perfect 3D sphere surface
-        // The lines drawn are bounded within radius ~0.7 (from 15 to 85 in the 100x100 box)
-        const r2 = (nx / 0.7) * (nx / 0.7) + (ny / 0.7) * (ny / 0.7);
-        if (r2 <= 1) {
-          const zSurface = Math.sqrt(1 - r2) * (width * 0.35);
-          return (Math.random() > 0.5 ? 1 : -1) * zSurface; // front or back of sphere
-        }
-        return (Math.random() - 0.5) * 20; // fallback depth
+        // The wikipedia map viewBox is 950x620. We want to center it in shapeSize x shapeSize.
+        const scale = shapeSize / 950;
+        const offsetY = (shapeSize - 620 * scale) / 2;
+        oCtx.translate(0, offsetY);
+        oCtx.scale(scale, scale);
+        
+        const path = new Path2D(WORLD_PATH);
+        oCtx.fillStyle = '#000';
+        oCtx.fill(path);
+      }, shapeSize, shapeSize, 3, (nx, ny, w) => {
+        // Equirectangular mapping to 3D Sphere
+        // nx is Longitude (-PI to PI), ny is Latitude (-PI/2 to PI/2)
+        const lon = nx * Math.PI;
+        // The SVG world map has Antarctica at the bottom. ny goes from -1 to 1.
+        const lat = ny * (Math.PI / 2);
+        
+        const R = w * 0.42; // Sphere radius
+        
+        // Spherical to Cartesian
+        const x = R * Math.cos(lat) * Math.sin(lon);
+        const y = R * Math.sin(lat); 
+        const z = R * Math.cos(lat) * Math.cos(lon);
+        
+        // Add minimal noise so it feels like a point cloud
+        const noise = 3;
+        return { 
+          x: x + (Math.random() - 0.5) * noise, 
+          y: y + (Math.random() - 0.5) * noise, 
+          z: z + (Math.random() - 0.5) * noise 
+        };
       });
 
       // 4. Heart (Get Involved)
@@ -187,10 +194,9 @@ export const GlobalParticleSystem = () => {
         `);
         oCtx.fillStyle = '#000';
         oCtx.fill(path);
-      }, shapeSize, shapeSize, 3, (nx, ny) => {
-        // Heart: Thickest in the center, tapering edges
+      }, shapeSize, shapeSize, 3, (nx, ny, w, h) => {
         const thickness = Math.max(0, 1 - Math.sqrt(nx * nx + ny * ny)) * 70;
-        return (Math.random() - 0.5) * thickness;
+        return { x: nx * w/2, y: ny * h/2, z: (Math.random() - 0.5) * thickness };
       });
 
       const padTargets = (arr: any[]) => {
@@ -229,6 +235,11 @@ export const GlobalParticleSystem = () => {
           y: t1.y + shapeOffsets[0].y,
           z: t1.z,
           targets: [t1, t2, t3, t4],
+          backgroundTarget: {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            z: (Math.random() - 0.5) * 800
+          },
           color: isSunlight ? COLORS.sunlight : COLORS.surfaceBlue,
           size: Math.random() * 1.5 + 1.0, // Slightly larger base size for 3D
           speedOffset: Math.random() * Math.PI * 2
@@ -236,11 +247,11 @@ export const GlobalParticleSystem = () => {
       }
 
       bubbles = [];
-      for (let i = 0; i < 250; i++) {
+      for (let i = 0; i < 800; i++) { // Increased background density significantly
         bubbles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          z: (Math.random() - 0.5) * 400, // Background bubbles have deep Z
+          z: (Math.random() - 0.5) * 600, // Background bubbles have deep Z
           size: Math.random() * 2.5 + 1,
           speed: Math.random() * 2.5 + 1.0,
           swayOffset: Math.random() * Math.PI * 2,
@@ -306,12 +317,16 @@ export const GlobalParticleSystem = () => {
       const endIndex = Math.min(startIndex + 1, SHAPE_COUNT - 1);
       
       const rawMorph = mappedScroll - startIndex;
-      let compressedMorph = (rawMorph - 0.35) / 0.3; 
+      // Widen transition window to 50% for a smooth, natural swarm effect
+      let compressedMorph = (rawMorph - 0.25) / 0.5; 
       compressedMorph = Math.max(0, Math.min(1, compressedMorph));
 
       const ease = compressedMorph < 0.5 
         ? 2 * compressedMorph * compressedMorph 
         : 1 - Math.pow(-2 * compressedMorph + 2, 2) / 2;
+
+      // Dispersion multiplier: creates a parabolic curve (0 -> 1 -> 0) during the transition
+      const dispersionPower = Math.sin(compressedMorph * Math.PI);
 
       // Calculate global rotation based on time and mouse
       const mouseXNorm = mouse.active ? (mouse.x / canvas.width - 0.5) * 2 : 0;
@@ -362,10 +377,19 @@ export const GlobalParticleSystem = () => {
         let finalTargetY = rotY + currOffsetY;
         let finalTargetZ = rotZ + currOffsetZ;
 
+        // --- Dispersion: Blend shape into background density ---
+        if (dispersionPower > 0) {
+          finalTargetX += (p.backgroundTarget.x - finalTargetX) * dispersionPower;
+          finalTargetY += (p.backgroundTarget.y - finalTargetY) * dispersionPower;
+          finalTargetZ += (p.backgroundTarget.z - finalTargetZ) * dispersionPower;
+        }
+
         // 6. Spring Physics to move current to target
-        p.x += (finalTargetX - p.x) * 0.15;
-        p.y += (finalTargetY - p.y) * 0.15;
-        p.z += (finalTargetZ - p.z) * 0.15;
+        // Reduced spring factor makes the particles lag behind slightly, 
+        // enhancing the feeling of a floating swarm during transitions.
+        p.x += (finalTargetX - p.x) * 0.08;
+        p.y += (finalTargetY - p.y) * 0.08;
+        p.z += (finalTargetZ - p.z) * 0.08;
 
         // 7. Mouse Repulsion in 2D Screen Space (Approximate)
         // We project the point to see if mouse is near it
